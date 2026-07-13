@@ -31,7 +31,7 @@ Afroz Shaikh
 
    ![image](./screenshots/billing-alert.png)
 
-* Billing should be monitored for day1 as AWs used pay-as-you go model so if any resources left running cost can keep increasing, early alert help prevent unexpected charges.
+* Billing should be monitored from day1 as AWs used pay-as-you go model so if any resources left running cost can keep increasing, early alert helps prevent unexpected charges.
 
 
 ## IAML Lab
@@ -97,7 +97,7 @@ Afroz Shaikh
 ### Step 3
 
    - Ran workflow successfully
-   
+
    ![image](./screenshots/oidc-workflow.png)
 
 ## Where I Got Stuck

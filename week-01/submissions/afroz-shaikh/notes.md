@@ -3,7 +3,7 @@
 - AWS region
 - AWS availability zones
 
-## SHared responsibility
+## Shared responsibility
 
 - What AWS secures `security of the cloud`
 - What we must secure `security in the cloud`
