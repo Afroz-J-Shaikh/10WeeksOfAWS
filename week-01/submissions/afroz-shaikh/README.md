@@ -80,6 +80,26 @@ Afroz Shaikh
 
    ![image](./screenshots/policy1.png)
 
+
+## Optional GitHub OIDC Challenge
+### Step 1
+
+   - Added oidc provider
+
+   ![image](./screenshots/oidc-provider.png)
+
+### Step 2
+
+   - Created IAM role
+
+   ![image](./screenshots/oidc-role.png)
+
+### Step 3
+
+   - Ran workflow successfully
+   
+   ![image](./screenshots/oidc-workflow.png)
+
 ## Where I Got Stuck
 
 I got stuck at billing read only access, even though i gave the read only access it still kept showing denied.
