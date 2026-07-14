@@ -143,6 +143,6 @@ policy grants only the actions required on the target service.
 2. What must change if Lambda, rather than EC2, needs to assume the role?
    - Add lambda in Trust policy.
 3. Why is an instance role safer than storing an IAM user's keys on EC2?
-   -Instance roles eliminate the need to store permanent IAM keys on EC2, automatically rotate credentials, and reduce the risk of unauthorized access.
+   - Instance roles eliminate the need to store permanent IAM keys on EC2, automatically rotate credentials, and reduce the risk of unauthorized access.
 4. What should happen when temporary credentials expire?
    - They become invalid causing API request to fail until new credentials are obtained.
