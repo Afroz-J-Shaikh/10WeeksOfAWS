@@ -1,0 +1,1 @@
+EC2 accessing S3 object using an IAM role.
