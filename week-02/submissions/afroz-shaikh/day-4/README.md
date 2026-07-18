@@ -81,6 +81,13 @@ I implemented an AWS Organizations environment to demonstrate centralized govern
 
    ![snapshot](./screenshots/part6-1.png)
 
+## What I learned
+
+- IAM Identity Center (or IAM roles/policies) can grant a user full access to a service.
+- But SCPs act as a guardrail at the account or OU level. They define the maximum allowable permissions for any identity in that scope.
+- If an SCP explicitly denies an action (e.g., Deny S3:CreateBucket), that denial overrides any allow statements in IAM policies.
+- The evaluation logic is simple: Explicit Deny > Allow > Default Deny. 
+
 ## Cleanup
 - Deleted the temporary Amazon S3 bucket created during testing.
 - Deleted the AWS IAM Identity Center user.
