@@ -51,6 +51,3 @@ storing permanent access keys.
 ## Cleanup
 Deleted the s3 bucket, terminated ec2 instance.
 Deleted the role.
-
-## LinkedIn Post
-Add your post link.

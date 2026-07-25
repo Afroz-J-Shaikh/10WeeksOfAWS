@@ -191,15 +191,17 @@ Explain the VPC, subnet, IGW, and route-table validation.
 
 ## Cleanup
 
-Terminate the Day 6 EC2 instances.
-Delete the Interface Endpoint.
-Delete NAT-A and wait for deletion.
-Release the Elastic IP.
-Delete the S3 Gateway Endpoint if not needed.
-Delete the VPC Flow Log.
-Delete the dedicated CloudWatch log group if not needed.
-Delete the custom NACL.
-Remove temporary route tables and Security Groups.
+- Terminate the Day 6 EC2 instances.
+- Delete the Interface Endpoint.
+- Delete NAT-A and wait for deletion.
+- Release the Elastic IP.
+- Delete the S3 Gateway Endpoint if not needed.
+- Delete the VPC Flow Log.
+- Delete the dedicated CloudWatch log group if not needed.
+- Delete the custom NACL.
+- Remove temporary route tables and Security Groups.
 
 
 ## LinkedIn Posts
+
+https://www.linkedin.com/feed/update/urn:li:ugcPost:7486801204723965953/
