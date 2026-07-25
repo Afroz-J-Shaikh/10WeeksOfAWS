@@ -96,4 +96,5 @@ I implemented an AWS Organizations environment to demonstrate centralized govern
 - Verified that no unnecessary billable AWS resources remained.
 
 ## LinkedIn Post
-Add your post link.
+
+> https://www.linkedin.com/posts/afroz-j-shaikh_10weeksofaws-10weeksofaws-aws10weekchallenge-activity-7484226920012734464-3SH8?utm_source=share&utm_medium=member_desktop&rcm=ACoAAGJx1GcBCkf9NyHBHuOyAieNa0GSGTC68FQ
