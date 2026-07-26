@@ -15,7 +15,7 @@ groups. Use the Day 7 and Day 8 Student Guides for detailed classroom support.
 | Seq | Session | Focus | File |
 |---:|---|---|---|
 | 01 | Day 7 | EC2, AMIs, User Data, IMDSv2, and pricing | [01-ec2-fundamentals-and-pricing.md](./01-ec2-fundamentals-and-pricing.md) |
-| 02 | Day 7 | Build and validate a Golden AMI | [02-ec2-ami-imdsv2-lab.md](./02-ec2-ami-imdsv2-lab.md) |
+| 02 | Day 7 | Build, automate, and validate a Golden AMI | [02-ec2-ami-imdsv2-lab.md](./02-ec2-ami-imdsv2-lab.md) |
 | 03 | Day 8 | EBS, snapshots, Instance Store, and placement | [03-ebs-storage-and-placement.md](./03-ebs-storage-and-placement.md) |
 | 04 | Day 8 | Mount, snapshot, and restore gp3 storage | [04-ebs-snapshot-lab.md](./04-ebs-snapshot-lab.md) |
 | 05 | Both | Document the architecture and decisions | [05-architecture-exercise.md](./05-architecture-exercise.md) |
