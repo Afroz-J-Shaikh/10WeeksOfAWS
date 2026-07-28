@@ -31,8 +31,7 @@ credentials
 CLAUDE.md
 
 # Weekly release gate — publish one week at a time.
-#To publish a week, delete its line below, then commit that week + this file.
-week-04/
+# To publish a week, delete its line below, then commit that week + this file.
 week-05/
 week-06/
 week-07/
