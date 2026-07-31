@@ -129,13 +129,13 @@
 
    ### Architecture Overview
 
-      - **Amazon EC2 Image Builder** automates the creation, testing, and distribution of versioned Golden AMIs.
-      - An **Image Pipeline** orchestrates the entire workflow using an **Image Recipe**, **Infrastructure Configuration**, and **Distribution Configuration**.
-      - The **Image Recipe** combines AWS-managed components with custom build and test components to configure and validate the image.
-      - A temporary **Build EC2** instance creates the Golden AMI, and a temporary **Test EC2** instance validates the image before publication.
-      - **Amazon Inspector** performs vulnerability assessment on the generated AMI to  improve security and compliance.
-      - The validated **Private Golden AMI** is distributed and can be shared across **multiple AWS Regions and AWS accounts** using the configured Distribution Configuration.
-      - The architecture provides **automated image creation, security validation, versioning, and consistent Golden AMI deployments**.
+   - **Amazon EC2 Image Builder** automates the creation, testing, and distribution of versioned Golden AMIs.
+   - An **Image Pipeline** orchestrates the entire workflow using an **Image Recipe**, **Infrastructure Configuration**, and **Distribution Configuration**.
+   - The **Image Recipe** combines AWS-managed components with custom build and test components to configure and validate the image.
+   - A temporary **Build EC2** instance creates the Golden AMI, and a temporary **Test EC2** instance validates the image before publication.
+   - **Amazon Inspector** performs vulnerability assessment on the generated AMI to  improve security and compliance.
+   - The validated **Private Golden AMI** is distributed and can be shared across **multiple AWS Regions and AWS accounts** using the configured Distribution Configuration.
+   - The architecture provides **automated image creation, security validation, versioning, and consistent Golden AMI deployments**.
 
 
 ## Cleanup
