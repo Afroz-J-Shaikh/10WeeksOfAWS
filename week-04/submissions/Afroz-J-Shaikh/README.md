@@ -393,3 +393,7 @@
 
 3. What would you automate in production?
    - Automate golden image creation, creating a pipeline that would automatically build, test and validate AMIs.
+     
+## LinkedIn post
+
+> https://www.linkedin.com/feed/update/urn:li:ugcPost:7489300481622859776/
