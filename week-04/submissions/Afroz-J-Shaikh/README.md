@@ -52,7 +52,7 @@
 - Pricing decisions:
 
 | Choice | Requirement | Reason |
-|---|---|---:|
+|---|---|---|
 | On-Demand | Unknown or short-term usage | Pay per second/hour, no commitment, no discount — highest cost per hour |
 | Reserved Instance | Steady matching EC2 usage | Commit to 1 or 3 years for a specific instance family/region for up to ~72% discount; billing discount applies even if the instance is stopped |
 | Savings Plans | Steady compute spend with flexibility | Commit to a $/hour spend (not a specific instance), discount auto-applies across instance families, sizes, and even Fargate/Lambda depending on plan type |
@@ -267,11 +267,11 @@
 
    - Mount efs and write from ec2 client 1
 
-   ![snapshot](./evidence/day8-storage/efs-client.png)
+   ![snapshot](./evidence/day8-storage/efs-client1.png)
 
    - Mount efs and read & write from ec2 client 2
 
-   ![snapshot](./evidence/day8-storage/efs-sg.png)
+   ![snapshot](./evidence/day8-storage/efs-client2.png)
 
    ![snapshot](./evidence/day8-storage/efs-c22.png)
 
@@ -291,7 +291,7 @@
 
    ![snapshot](./evidence/day8-storage/efs-c11.png)
 
-   ![snapshot](./evidence/day8-storage/efs-c11.png)
+   ![snapshot](./evidence/day8-storage/efs-c22.png)
 
 - Storage decisions :
 
@@ -369,6 +369,6 @@
 2. What makes the formatting step dangerous?
    - Formatting is irreversible, once formatted existing data is gone.
    - Risk of formatting the wrong device or the root volume, especially since Linux device naming (/dev/xvdf vs /dev/nvme1n1) isn't always predictable.
-   
+
 3. What would you automate in production?
    - Automate golden image creation, creating a pipeline that would automatically build, test and validate AMIs.
