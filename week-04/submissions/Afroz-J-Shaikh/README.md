@@ -310,7 +310,7 @@
 
 ### Day 7 - Pipeline Architecture
 
-  ![snapshot](./evidence/day7-ec2/pipeline-architecture.png) 
+  ![snapshot](./evidence/day7-ec2/pipeline-architecture.png)
 
    ### Architecture Overview
 
@@ -322,6 +322,31 @@
    - The validated **Private Golden AMI** is distributed and can be shared across **multiple AWS Regions and AWS accounts** using the configured Distribution Configuration.
    - The architecture provides **automated image creation, security validation, versioning, and consistent Golden AMI deployments**.
 
+### Day - 8 EBS Persistence, EFS, and Storage Recovery Architecture
+
+   ![snapshot](./evidence/day8-storage/ebs-architecture.png)
+
+   ### Architecture Overview
+
+   - Amazon EC2 uses an encrypted **Amazon EBS gp3 volume** for persistent block storage.
+   - **Amazon EBS volumes are Availability Zone (AZ) scoped** and can only be attached to EC2 instances within the same AZ.
+   - **Amazon Data Lifecycle Manager (DLM)** automatically creates scheduled snapshots for EBS volumes tagged with **`Backup=Daily`**.
+   - **Amazon EBS snapshots are Regional resources** and can be copied across AWS Regions.
+   - The snapshot is copied from **ap-south-1 (Mumbai)** to **ap-southeast-2 (Sydney)** for disaster recovery.
+   - A new encrypted **Amazon EBS volume** is created from the copied snapshot and attached to a **Recovery EC2** instance.
+   - This architecture provides **persistent storage, automated backups, and cross-region disaster recovery**.
+
+   ![snapshot](./evidence/day8-storage/efs-architecture.png)    
+
+   ### Architecture Overview
+
+   - Amazon EC2 instances in two Availability Zones mount a shared **Amazon EFS file system** for persistent file storage.
+   - **Amazon EFS** is a Regional service that automatically stores data redundantly across multiple Availability Zones for high availability and durability.
+   - An **Amazon EFS Mount Target** is created in each Availability Zone to provide low-latency access for EC2 instances within the same AZ.
+   - EC2 instances mount Amazon EFS over **NFS (TCP 2049)** through their local mount target.
+   - **Security Groups** allow inbound **NFS (TCP 2049)** traffic from the EC2 instances to the Amazon EFS mount targets.
+   - Both EC2 instances can simultaneously read from and write to the same shared Amazon EFS file system.
+   - This architecture provides **shared storage, high availability, and scalable file access** across multiple Availability Zones.
 
 ## Cleanup
 - Instances:
