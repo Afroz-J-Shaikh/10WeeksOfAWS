@@ -289,10 +289,6 @@
 
    ![snapshot](./evidence/day8-storage/efs-unmount-c2.png)
 
-   ![snapshot](./evidence/day8-storage/efs-c11.png)
-
-   ![snapshot](./evidence/day8-storage/efs-c22.png)
-
 - Storage decisions :
 
 | Requirement | Best fit | Important boundary |
