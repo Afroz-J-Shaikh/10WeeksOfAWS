@@ -107,78 +107,78 @@
 
    - Launched Blue and Green EC2
 
-   [!snapshot](./evidence/day10-load-balancing/blue-ec2.png)
+   ![snapshot](./evidence/day10-load-balancing/blue-ec2.png)
 
-   [!snapshot](./evidence/day10-load-balancing/green-ec2.png)
+   ![snapshot](./evidence/day10-load-balancing/green-ec2.png)
 
 - Target Groups and ALB
 
-   [!snapshot](./evidence/day10-load-balancing/tgs.png)
+   ![snapshot](./evidence/day10-load-balancing/tgs.png)
 
-   [!snapshot](./evidence/day10-load-balancing/alb.png)
+   ![snapshot](./evidence/day10-load-balancing/alb.png)
 
    - Default blue page
 
-   [!snapshot](./evidence/day10-load-balancing/blue-page.png)
+   ![snapshot](./evidence/day10-load-balancing/blue-page.png)
 
 - Host and path routing:
 
-   [!snapshot](./evidence/day10-load-balancing/rules.png)
+   ![snapshot](./evidence/day10-load-balancing/rules.png)
 
-   [!snapshot](./evidence/day10-load-balancing/rule-rt.png)
+   ![snapshot](./evidence/day10-load-balancing/rule-rt.png)
 
 - Weighted release sample:
 
-   [!snapshot](./evidence/day10-load-balancing/release.png)
+   ![snapshot](./evidence/day10-load-balancing/release.png)
 
 > The observed distribution (~80.6% Blue and ~19.4% Green) closely matched the configured 80:20 weighted forwarding rule, demonstrating successful Blue/Green traffic distribution.
 
 - Stickiness result:
 
-   [!snapshot](./evidence/day10-load-balancing/stickiness-en.png)
+   ![snapshot](./evidence/day10-load-balancing/stickiness-en.png)
 
-   [!snapshot](./evidence/day10-load-balancing/stickiness.png)
+   ![snapshot](./evidence/day10-load-balancing/stickiness.png)
 
 - Health and draining result:
 
    - Green Target nhealthy
 
-   [!snapshot](./evidence/day10-load-balancing/nginx-stop.png)
+   ![snapshot](./evidence/day10-load-balancing/nginx-stop.png)
  
-   [!snapshot](./evidence/day10-load-balancing/app2-bad.png)
+   ![snapshot](./evidence/day10-load-balancing/app2-bad.png)
 
-   [!snapshot](./evidence/day10-load-balancing/green-unhealthy.png)
+   ![snapshot](./evidence/day10-load-balancing/green-unhealthy.png)
 
    - Green Target Healthy
 
-   [!snapshot](./evidence/day10-load-balancing/nginx-start.png)
+   ![snapshot](./evidence/day10-load-balancing/nginx-start.png)
  
-   [!snapshot](./evidence/day10-load-balancing/app2-good.png)
+   ![snapshot](./evidence/day10-load-balancing/app2-good.png)
 
-   [!snapshot](./evidence/day10-load-balancing/green-healthy.png)
+   ![snapshot](./evidence/day10-load-balancing/green-healthy.png)
 
    - Draining
 
-   [!snapshot](./evidence/day10-load-balancing/drain-blue.png)
+   ![snapshot](./evidence/day10-load-balancing/drain-blue.png)
 
-   [!snapshot](./evidence/day10-load-balancing/err-blue.png)
+   ![snapshot](./evidence/day10-load-balancing/err-blue.png)
 
 
 - NLB TCP result:
 
    - Created Target Group and NLB
 
-   [!snapshot](./evidence/day10-load-balancing/nlb-tg.png)
+   ![snapshot](./evidence/day10-load-balancing/nlb-tg.png)
 
-   [!snapshot](./evidence/day10-load-balancing/nlb-web.png)
+   ![snapshot](./evidence/day10-load-balancing/nlb-web.png)
 
-   [!snapshot](./evidence/day10-load-balancing/nlb-traffic.png)
+   ![snapshot](./evidence/day10-load-balancing/nlb-traffic.png)
 
    - **Flow hashing, not round robin** NLB operates at L4 and picks a target using a hash of the 5-tuple (source IP, source port, dest IP, dest port, protocol). Every new TCP connection gets hashed independently — it's not tracking "last target used" and alternating.
 
    - Zonal Distribution
 
-   [!snapshot](./evidence/day10-load-balancing/zonal.png)
+   ![snapshot](./evidence/day10-load-balancing/zonal.png)
 
 - ALB/NLB/GWLB decisions:
 
