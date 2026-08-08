@@ -194,27 +194,27 @@ Write 250-400 words.
 ## Cleanup
 - Auto Scaling resources:
 
-   [!snapshot](./evidence/cleanup/asg.png)
+   ![snapshot](./evidence/cleanup/asg.png)
 
 - Load balancers and target groups:
 
-   [!snapshot](./evidence/cleanup/lb.png)
+   ![snapshot](./evidence/cleanup/lb.png)
 
-   [!snapshot](./evidence/cleanup/tg.png)
+   ![snapshot](./evidence/cleanup/tg.png)
 
 - Instances:
 
-   [!snapshot](./evidence/cleanup/ec2.png)
+   ![snapshot](./evidence/cleanup/ec2.png)
 
 - EIPs and public IPv4:
 
-   [!snapshot](./evidence/cleanup/ip.png)
+   ![snapshot](./evidence/cleanup/ip.png)
 
 - Optional resources:
 
-   [!snapshot](./evidence/cleanup/sg.png)
+   ![snapshot](./evidence/cleanup/sg.png)
 
-   [!snapshot](./evidence/cleanup/vpc.png)
+   ![snapshot](./evidence/cleanup/vpc.png)
 
 ## Reflection
 1. Which metric best represents demand for this application?
