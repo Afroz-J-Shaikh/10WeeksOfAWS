@@ -189,7 +189,8 @@
 | Transparent firewall, IDS, IPS, or deep-packet inspection | GWLB | Inserts compatible appliances through GENEVE |
 
 ## Architecture Decision
-Write 250-400 words.
+
+   ![snapshot](./evidence/cleanup/alb-asg-architecture.png)
 
 ## Cleanup
 - Auto Scaling resources:
