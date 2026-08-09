@@ -1,7 +1,6 @@
 # Week 6 Submission Format
 
-Day 11 can be submitted now. Add Day 12 evidence after that class and keep both
-days in the same Week 6 submission.
+Keep Day 11 and Day 12 evidence in the same Week 6 submission.
 
 ```text
 week-06/submissions/<github-username>/
@@ -37,7 +36,16 @@ week-06/submissions/<github-username>/
 - Troubleshooting lesson:
 
 ## Day 12
-- Complete after Day 12 material is published.
+- Source, SRR destination, and CRR destination Regions:
+- SRR rule and version results:
+- CRR rule and version results:
+- Pre-rule object result:
+- Unmatched-prefix result:
+- Transfer Acceleration review:
+- Multipart cleanup rule:
+- EFS and FSx review:
+- Hybrid-storage decisions:
+- Optional Compliance or website result:
 
 ## Architecture Decision
 Write 250-400 words.
@@ -48,12 +56,17 @@ Write 250-400 words.
 - Object Lock bucket and protected versions:
 - Multipart uploads:
 - KMS key:
+- Replication rules and IAM role:
+- Transfer Acceleration:
+- Optional website and Compliance cleanup:
 - Public-access controls:
 
 ## Reflection
 1. Which S3 control protects confidentiality, and which protects recovery?
 2. Why is a presigned URL different from making a bucket public?
 3. Which storage-class or lifecycle decision is easiest to get wrong on cost?
+4. Why did pre-rule objects remain only in the source?
+5. When would you choose DataSync instead of Snow Family?
 ```
 
 ## Day 11 Evidence Checklist
@@ -74,6 +87,24 @@ Write 250-400 words.
 - [ ] Controlled delete denial and successful cleanup after Legal Hold off
 - [ ] Day 11 architecture and decision table
 - [ ] Complete cleanup evidence and Day 11 LinkedIn link
+
+## Day 12 Evidence Checklist
+
+- [ ] Three private, versioned SSE-S3 buckets in the intended Regions
+- [ ] Enabled `srr-prefix-rule` and `crr-prefix-rule`
+- [ ] SRR source `COMPLETED` and destination `REPLICA` evidence
+- [ ] SRR destination contains Versions 1 and 2
+- [ ] CRR source `COMPLETED` and destination `REPLICA` evidence
+- [ ] CRR destination contains Versions 1 and 2
+- [ ] `srr/before-rule.txt` and `crr/before-rule.txt` remain source-only
+- [ ] `other/no-replication-demo.txt` remains source-only
+- [ ] Transfer Acceleration configuration reviewed
+- [ ] Seven-day incomplete multipart cleanup rule
+- [ ] Existing EFS configuration and TCP `2049` review
+- [ ] FSx family and hybrid-storage decision table
+- [ ] Optional Compliance denial and pending-cleanup note, if performed
+- [ ] Optional website and error page plus restored BPA, if performed
+- [ ] Complete Day 12 cleanup and LinkedIn link
 
 Mask account IDs, ARNs, bucket/object URLs, presigned URLs, access keys, session
 tokens, email addresses, organization data, private object contents, and

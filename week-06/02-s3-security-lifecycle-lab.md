@@ -59,27 +59,21 @@ Never disable Block Public Access for this lab. Never expose a presigned URL,
 account ID, ARN, access key, session token, email address, or private data in
 screenshots.
 
-## 1. Prepare Harmless Sample Files
+## 1. Review the Synthetic Sample Pack
 
-Create these files locally with any text editor:
+Use [day11_S3_Sample_Files](./day11_S3_Sample_Files/) and follow
+[UPLOAD_INSTRUCTIONS.md](./day11_S3_Sample_Files/UPLOAD_INSTRUCTIONS.md).
 
-| Local file | Synthetic content |
-|---|---|
-| `class-notes.txt` | `CloudAdhar Day 11 S3 class notes` |
-| `private-report.txt` | `Training-only private report. No customer data.` |
-| `version-demo.txt` | `Version 1 - created for Day 11` |
-| `application.log` | `INFO Day11 synthetic application log` |
-| `standard-demo.txt` | `S3 Standard training object` |
-| `intelligent-tiering-demo.txt` | `S3 Intelligent-Tiering training object` |
-| `retention-demo.txt` | `Object Lock training object` |
+The pack contains Day 11 documents, two versions of the versioning object,
+storage-class examples, a lifecycle log, presigned-access content, website
+files, and Object Lock content. Use only these synthetic files or equivalent
+training-only data.
 
-Also prepare a second local file containing:
+Both version uploads have the same basename and must use the S3 key:
 
 ```text
-Version 2 - uploaded with the same S3 object key
+versions/version-demo.txt
 ```
-
-Both version uploads must use the S3 key `versions/version-demo.txt`.
 
 ## 2. Create the Customer Managed KMS Key
 
@@ -188,13 +182,13 @@ Frequent Access tier and are not automatically tiered.
 ### Upload version 1
 
 1. Open `versions/` in the source bucket.
-2. Upload the local `version-demo.txt` containing Version 1.
+2. Upload `day11_S3_Sample_Files/versions/v1/version-demo.txt`.
 3. Open its properties and record the version ID.
 
 ### Upload version 2 under the same key
 
-1. Rename the local Version 2 file to `version-demo.txt`, or otherwise ensure
-   its S3 destination key is exactly `versions/version-demo.txt`.
+1. Upload `day11_S3_Sample_Files/versions/v2/version-demo.txt`, ensuring its S3
+   destination key remains exactly `versions/version-demo.txt`.
 2. Upload it into `versions/` and confirm the overwrite prompt.
 3. Turn on **Show versions**.
 4. Verify two data versions with different version IDs and Version 2 as the

@@ -1,4 +1,4 @@
-# Week 6 Day 11 Quick Revision
+# Week 6 Quick Revision
 
 ## Recall
 
@@ -20,6 +20,16 @@
 13. Object Lock protects exact object versions.
 14. Legal Hold has no fixed expiry; Compliance retention cannot be bypassed.
 15. A manual copy creates an independent object; it is not ongoing replication.
+16. SRR copies eligible new versions within one Region; CRR copies to another
+    Region.
+17. Live replication is asynchronous and normally not retroactive.
+18. Batch Replication addresses eligible existing or previously failed objects.
+19. Transfer Acceleration helps suitable long-distance transfers only when the
+    accelerated endpoint is used.
+20. Incomplete multipart parts remain billable until completed, aborted, or
+    removed by lifecycle.
+21. EFS is shared NFS; FSx selection follows the required filesystem and
+    workload.
 
 ## Decision Table
 
@@ -40,6 +50,16 @@
 | Prevent deletion indefinitely until released | Legal Hold |
 | Automatic transition and expiration | Lifecycle |
 | Selected one-time object transfer | Manual copy |
+| Automatic copies within one Region | SRR |
+| Automatic copies to another Region | CRR |
+| Existing eligible objects | S3 Batch Replication |
+| Long-distance upload through edge locations | Transfer Acceleration |
+| Shared Linux NFS | EFS |
+| Windows SMB and Microsoft integration | FSx for Windows File Server |
+| HPC parallel filesystem | FSx for Lustre |
+| Automated online movement | DataSync |
+| Offline migration or edge compute | Snow Family |
+| Managed SFTP into S3 or EFS | Transfer Family |
 
 ## Important Traps
 
@@ -54,9 +74,16 @@
 - A presigned URL is a bearer credential until expiry.
 - Block Public Access does not replace least-privilege IAM and bucket policies.
 - Object Lock protects versions, not only the visible object key.
-- Do not use Compliance mode in a temporary lab.
+- Compliance mode cannot be bypassed; use it only with a short approved
+  retention and a pending-cleanup plan.
 - Emptying only the normal object list does not empty a versioned bucket.
 - Manual copy does not automatically copy future object versions.
+- Live replication does not automatically copy pre-rule objects.
+- Correcting permissions does not automatically retry every `FAILED` version.
+- Replication Time Control, replication metrics, CRR transfer, and destination
+  storage can add cost.
+- A small console upload does not prove Transfer Acceleration performance.
+- The multipart sample file is conceptual and does not force multipart upload.
 
 ## Scenarios
 
@@ -94,6 +121,125 @@ a prefix-scoped lifecycle rule and include noncurrent-version handling.
 An object must not be deleted until an investigation ends, but no end date is
 known. Use Object Lock Legal Hold on the required version.
 
+### Scenario 7
+
+New `crr/` versions must appear in Tokyo, but an older matching object also
+needs copying. Use live CRR for new versions and S3 Batch Replication for the
+eligible existing object.
+
+### Scenario 8
+
+Linux instances need shared NFS. Choose EFS. Windows applications need managed
+SMB and Microsoft integration. Choose FSx for Windows File Server.
+
+### Scenario 9
+
+Data must move automatically over the network from on premises to AWS. Use
+DataSync. If network transfer cannot meet the deadline, evaluate Snow Family.
+
+## Day 12 Practice Questions
+
+> **Disclaimer:** These are original educational questions modelled on the
+> SAA-C03 style. They are not real exam questions or exam dumps.
+
+### Question 1
+
+An object under `crr/` was uploaded before its CRR rule was enabled and does not
+appear in the destination. New versions replicate correctly. What should copy
+the existing eligible version?
+
+- A. Transfer Acceleration
+- B. S3 Batch Replication
+- C. A presigned URL
+- D. EFS Replication
+
+<details><summary>Show Answer</summary>
+
+**Answer: B**
+
+Live replication normally processes eligible versions created after the rule
+becomes active. Batch Replication addresses eligible existing or failed
+versions.
+
+</details>
+
+### Question 2
+
+A company requires automatic copies of new S3 object versions in another AWS
+Region. Which feature best meets the requirement?
+
+- A. Same-Region Replication
+- B. Cross-Region Replication
+- C. S3 File Gateway
+- D. Intelligent-Tiering
+
+<details><summary>Show Answer</summary>
+
+**Answer: B**
+
+CRR asynchronously copies eligible versions to a destination bucket in a
+different Region.
+
+</details>
+
+### Question 3
+
+An eligible object's replication status is `FAILED`. Permissions are corrected,
+but that version is not retried automatically. What is the best next action?
+
+- A. Disable versioning
+- B. Upload a new version or use Batch Replication
+- C. Make the source bucket public
+- D. Enable static website hosting
+
+<details><summary>Show Answer</summary>
+
+**Answer: B**
+
+Correcting the configuration does not guarantee automatic retry of a failed
+version. A new eligible version or Batch Replication provides the recovery
+path.
+
+</details>
+
+### Question 4
+
+Global clients upload large files over long distances to one S3 bucket. Which
+option can route transfers through nearby AWS edge locations?
+
+- A. Transfer Acceleration
+- B. One Zone-IA
+- C. Object Lock
+- D. EFS Access Points
+
+<details><summary>Show Answer</summary>
+
+**Answer: A**
+
+Transfer Acceleration uses an accelerated endpoint, edge locations, and the AWS
+global network for suitable long-distance transfers.
+
+</details>
+
+### Question 5
+
+An organization must perform automated online migration from an on-premises
+NFS server into AWS storage. Which service is the best fit?
+
+- A. Snow Family
+- B. AWS DataSync
+- C. S3 Glacier Deep Archive
+- D. FSx for Windows File Server
+
+<details><summary>Show Answer</summary>
+
+**Answer: B**
+
+DataSync provides managed online movement between supported storage systems.
+Snow Family is evaluated when offline transfer or edge processing is required.
+
+</details>
+
 ## Final Check
 
 - [ ] I can describe bucket, object, key, prefix, metadata, and version ID.
@@ -105,4 +251,8 @@ known. Use Object Lock Legal Hold on the required version.
 - [ ] I can explain presigned URL scope, permission, and expiry.
 - [ ] I can distinguish Legal Hold, Governance, and Compliance retention.
 - [ ] I can distinguish manual copy from S3 Replication.
-- [ ] I know every Day 11 resource and hidden version that must be cleaned up.
+- [ ] I can compare SRR, CRR, and Batch Replication.
+- [ ] I can interpret `PENDING`, `COMPLETED`, `FAILED`, and `REPLICA`.
+- [ ] I can explain Transfer Acceleration and multipart cleanup.
+- [ ] I can choose EFS, an FSx option, or a hybrid transfer service.
+- [ ] I know every Week 6 resource and hidden version that must be cleaned up.

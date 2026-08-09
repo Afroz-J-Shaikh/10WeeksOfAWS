@@ -150,7 +150,9 @@ controls. Versioning is required.
 | Governance mode | Authorized principals can bypass retention |
 | Compliance mode | No principal, including root, can bypass before expiry |
 
-Use Legal Hold for this disposable lab. Do not enable Compliance mode.
+Use Legal Hold for the Day 11 core lab. The optional Day 12 Compliance make-up
+uses a separate bucket, a short approved retention, and documented pending
+cleanup because Compliance retention cannot be bypassed.
 
 ## Manual Copy vs Replication
 
