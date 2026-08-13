@@ -192,6 +192,27 @@
 
    ![snapshot](./evidence/cleanup/alb-asg-architecture.png)
 
+   ### Architecture Overview
+
+   - **Amazon VPC:** Deployed a dedicated Amazon VPC (`10.0.0.0/16`) in the **ap-south-1 (Mumbai)** Region across **two Availability Zones (AZs)**.
+
+   - **Networking:** Created public subnets for the internet-facing Application Load Balancer (ALB) and NAT Gateways, and private subnets for Amazon EC2 web servers.
+
+   - **Application Load Balancer (ALB):** Deployed an internet-facing ALB to distribute HTTP requests across healthy EC2 instances using Target Group health checks on **`/health.html`**.
+
+   - **Amazon EC2 Auto Scaling:** Managed NGINX web servers using an Auto Scaling Group and Launch Template, enabling automatic scale-out, scale-in, and self-healing.
+
+   - **Connectivity & Security:** Used an Internet Gateway, NAT Gateway, route tables, and Security Groups to provide secure internet access while keeping web servers isolated in private subnets.
+
+   - **Monitoring & Notifications:** Used Amazon CloudWatch to monitor CPU utilization and drive Target Tracking Auto Scaling, with Amazon SNS providing email notifications for CloudWatch alarms.
+
+   - **Administration:** Enabled secure instance management using AWS Systems Manager Session Manager without requiring a bastion host or inbound SSH access.
+
+   - **Architecture Benefits:** Delivers a **secure, highly available, fault-tolerant, self-healing, and automatically scalable** web application architecture aligned with **AWS Well-Architected Framework principles**.
+
+> **Note:** The architecture diagram illustrates a production-ready deployment with **one NAT Gateway per Availability Zone** for high availability. The hands-on implementation used **a single NAT Gateway** to optimize cost while demonstrating the same core concepts.
+
+
 ## Cleanup
 - Auto Scaling resources:
 
