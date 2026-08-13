@@ -60,7 +60,7 @@
 
    - Version 2 is current version again
 
-   ![snapshot](./evidence/day11-s3/src-v2-bacl.png)
+   ![snapshot](./evidence/day11-s3/src-v2-back.png)
 
    ![snapshot](./evidence/day11-s3/src-v2-data.png)
 
@@ -84,7 +84,7 @@
 
    ![snapshot](./evidence/day11-s3/create-policy.png)
 
-   ![snapshot](./evidence/day11-s3/reject-policy.png)
+   ![snapshot](./evidence/day11-s3/policy-reject.png)
 
 - Presigned URL result and expiry:
 
