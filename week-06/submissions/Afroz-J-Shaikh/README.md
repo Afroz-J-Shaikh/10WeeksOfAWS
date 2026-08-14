@@ -137,7 +137,7 @@
 
    - Normal delete succeeds by creating a delete marker
 
-   ![snapshot](./evidence/day12-storage/lock-delete.png)
+   ![snapshot](./evidence/day12-storage/lock-deleted.png)
 
    ![snapshot](./evidence/day12-storage/lock-delete-marker.png)
 
@@ -169,9 +169,9 @@
 
    - Website Accessable (Home Page + Error Page)
 
-   ![snapshot](./evidence/day12-storage/url-acessed.png)
+   ![snapshot](./evidence/day12-storage/url-accessed.png)
 
-   ![snapshot](./evidence/day12-storage/url-error.png)
+   ![snapshot](./evidence/day12-storage/url-err.png)
 
 - Source, SRR destination, and CRR destination Regions:
 
