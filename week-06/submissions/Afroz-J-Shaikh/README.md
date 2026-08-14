@@ -128,72 +128,279 @@
 
 
 ## Day 12
+
+- Optional Make-Up A - Object Lock Compliance
+
+   - Created bucket and enabled Object Lock Retention
+   
+   ![snapshot](./evidence/day12-storage/lock-retention.png)
+
+   - Normal delete succeeds by creating a delete marker
+
+   ![snapshot](./evidence/day12-storage/lock-delete.png)
+
+   ![snapshot](./evidence/day12-storage/lock-delete-marker.png)
+
+   - `Access Denied`, zero successfully deleted versions
+
+   ![snapshot](./evidence/day12-storage/lock-delete-denied.png)
+
+- Optional Make-Up B - Native S3 Static Website
+
+   - Bucket created content added, normal URL `ObjectDenied`
+
+   ![snapshot](./evidence/day12-storage/website-bucket.png)
+
+   ![snapshot](./evidence/day12-storage/url-denied.png)
+
+   - Enabled **Static Website Hosting**, still returns 403 before public-read permission is configured
+
+   ![snapshot](./evidence/day12-storage/website-denied.png)
+
+   - Turn off only the two public-policy blockers required at the account level and bucket level
+
+   ![snapshot](./evidence/day12-storage/bpa-account.png)
+
+   ![snapshot](./evidence/day12-storage/bpa-bucket.png)
+
+   - Added bucket policy
+
+   ![snapshot](./evidence/day12-storage/policy.png)
+
+   - Website Accessable (Home Page + Error Page)
+
+   ![snapshot](./evidence/day12-storage/url-acessed.png)
+
+   ![snapshot](./evidence/day12-storage/url-error.png)
+
 - Source, SRR destination, and CRR destination Regions:
+
+   - Replication Source Bucket Verification
+
+   ![snapshot](./evidence/day12-storage/source.png)
+
+   ![snapshot](./evidence/day12-storage/source1.png)
+
+   ![snapshot](./evidence/day12-storage/source2.png)
+
+   - SRR Destination Bucket Verification
+
+   ![snapshot](./evidence/day12-storage/srr-dest.png)
+
+   ![snapshot](./evidence/day12-storage/srr-dest1.png)
+
+   ![snapshot](./evidence/day12-storage/srr-dest2.png)
+
+   - CRR Destination Bucket Verification
+
+   ![snapshot](./evidence/day12-storage/crr-dest.png)
+
+   ![snapshot](./evidence/day12-storage/crr-dest1.png)
+
+   ![snapshot](./evidence/day12-storage/crr-dest2.png)
+
+- Object uploaded in source bucket before any rule creation
+
+   ![snapshot](./evidence/day12-storage/srr-before.png)
+
+   ![snapshot](./evidence/day12-storage/crr-before.png)
+
 - SRR rule and version results:
+
+   - Replication Rule Created
+   
+   ![snapshot](./evidence/day12-storage/srr-rule.png)
+
+   - Object uploaded to key `srr/` and object showed replication status `PENDING` then `COMPLETED`
+
+   ![snapshot](./evidence/day12-storage/src-srr-rep.png)
+
+   - The destination object report `REPLICA`
+
+   ![snapshot](./evidence/day12-storage/srr-replica.png)
+
+   ![snapshot](./evidence/day12-storage/srr-replica-data.png)
+
 - CRR rule and version results:
+
+   - Replication Rule Created
+
+   ![snapshot](./evidence/day12-storage/crr-rule.png)
+
+   - Object uploaded to key `crr/` and object showed replication status `PENDING` then `COMPLETED`
+
+   ![snapshot](./evidence/day12-storage/src-crr-rep.png)
+
+   - The destination object report `REPLICA`
+
+   ![snapshot](./evidence/day12-storage/crr-replica.png)
+
+   ![snapshot](./evidence/day12-storage/crr-replica-data.png)
+
 - Pre-rule object result:
+
+   - Data existing pre-rule is not replicated in both SRR and CRR
+
+   - Validation of source `srr/` and SRR bucket data
+
+   ![snapshot](./evidence/day12-storage/src-srr-data.png)
+
+   ![snapshot](./evidence/day12-storage/srr-data.png)
+
+   - Validation of source `crr/` and CRR bucket data
+
+   ![snapshot](./evidence/day12-storage/src-crr-data.png)
+
+   ![snapshot](./evidence/day12-storage/crr-data.png)
+
 - Unmatched-prefix result:
+
+   - Created and uploaded object in `other/` in source bucket and confirmed no replication occured
+
+   ![snapshot](./evidence/day12-storage/other-data.png)
+
+   ![snapshot](./evidence/day12-storage/other-rep-status.png)
+
+   - Not replicated in either **SRR** nor **CRR**
+
+   ![snapshot](./evidence/day12-storage/srr-no-rep.png)
+
+   ![snapshot](./evidence/day12-storage/crr-no-rep.png)
+
+- Review Existing-Object Replication
+
+   ![snapshot](./evidence/day12-storage/batch.png)
+
+   ![snapshot](./evidence/day12-storage/batch1.png)
+
 - Transfer Acceleration review:
+
+   - Transfer Acceleration endpoint created
+
+   ![snapshot](./evidence/day12-storage/transfer-endpoint.png)
+
+   - Configured to user endpoint for transfering 
+
+   ![snapshot](./evidence/day12-storage/transfer-cli.png)
+
+   - Speed Comparision
+
+   ![snapshot](./evidence/day12-storage/transfer-comp.png)
+
+   - Enabling Transfer Acceleration on a bucket doesn't automatically speed anything up. It just turns on the capability. The client (CLI, SDK, or app) has to explicitly target the accelerated endpoint — otherwise every request still goes to the regular regional endpoint and you get zero benefit despite paying for it.
+
 - Multipart cleanup rule:
-- EFS and FSx review:
-- Hybrid-storage decisions:
-- Optional Compliance or website result:
+
+   ![snapshot](./evidence/day12-storage/multipart-rule.png)
+
+- EFS review:
+
+   ![snapshot](./evidence/day12-storage/efs-general.png)
+
+   ![snapshot](./evidence/day12-storage/regional.png)
+   
+- FSx review:
+
+   ![snapshot](./evidence/day12-storage/netapp.png)
+
+   ![snapshot](./evidence/day12-storage/zfs.png)
+
+   ![snapshot](./evidence/day12-storage/windows.png)
+
+   ![snapshot](./evidence/day12-storage/luster.png)
+
 
 ## Architecture Decision
 Write 250-400 words.
 
 ## Cleanup
-- Source bucket and versions:
-- Destination bucket and versions:
-- Object Lock bucket and protected versions:
-- Multipart uploads:
-- KMS key:
-- Replication rules and IAM role:
-- Transfer Acceleration:
-- Optional website and Compliance cleanup:
+
+- All buckets emptied and deleted except Object Lock Compliance:
+
+   ![snapshot](./evidence/cleanup/s3.png)
+
+- KMS key scheduled for deletion:
+
+   ![snapshot](./evidence/cleanup/kms.png)
+
 - Public-access controls:
+  
+   ![snapshot](./evidence/cleanup/pba.png)
 
 ## Reflection
 1. Which S3 control protects confidentiality, and which protects recovery?
+
+   - **Confidentiality:** SSE-S3 / SSE-KMS (encryption at rest) + access-control layers (Block Public Access, bucket owner enforced, IAM/bucket policies). SSE-KMS adds separate key polic and requires kms:GenerateDataKey/kms:Decrypt on top of S3 permissions.
+
+   - **Recovery:** Versioning + delete-marker removal. A normal delete just adds a delete marker — removing that marker restores the previous version. Permanent deletion of a specific version is normally irreversible, so recovery depends entirely on versioning being enabled beforehand.
+
 2. Why is a presigned URL different from making a bucket public?
+
+   - A presigned URL grants a single signed operation on one specific object, tied to an expiry time, and scoped to whatever the signer's own IAM permissions already allow .
+
+   - A public bucket exposes access to anyone with no expiry check.
+
+   - The bucket itself stays private in presigned URL. Anyone holding the link before it expires can use it, so short expiry and not publishing the full URL are the practical safeguards.
+
 3. Which storage-class or lifecycle decision is easiest to get wrong on cost?
+
+   1. The Retrieval Fee Trap (Standard-IA & Glacier)
+      - Moving to `Standard-IA` without checking how often app reads the data.
+      - S3 standard doesn't charge for data retrievals only for storage.
+      - If your app reads more than `-55%` of your total data volume than retrieval fees will cost more than S3 standard.
+
+   2. Deleting/overwriting file shortly after a lifecycle policy moves them to a colder tier.
+      - If you delete or replace your file 5 days later after it has been moved to Standard-IA,
+      AWS will still bill you for remaining 25 days as a prorated early-deletion fee..
+
 4. Why did pre-rule objects remain only in the source?
+
+   - Live replication is forward-looking — it only applies to eligible object versions created after the replication rule becomes active. Anything uploaded before the rule existed has no rule to match against, so S3 never queues it for replication.
+   - We can use S3 Batch Replication as the separate mechanism for pre-existing or previously-failed objects.
+
 5. When would you choose DataSync instead of Snow Family?
 
+   - **DataSync** 
+      - Small-medium data, decent bandwidth, needs to run regularly
+      - Keeping on-prem and S3/EFS continuously in sync
+
+   - **Snow Family** 
+      - Huge data (many TB/PB), weak/no network, one-time migration
+      - Remote location with no reliable internet, need local compute too
 
 ## Day 11 Evidence Checklist
 
-- [ ] Source: Bucket owner enforced, BPA on, versioning, and SSE-S3
-- [ ] Destination: BPA on, versioning, SSE-KMS, correct KMS key, and Bucket Key
-- [ ] Standard and Intelligent-Tiering object properties
-- [ ] Two version IDs and a delete marker
-- [ ] Recovered object after deleting only the delete marker
-- [ ] Successful manual copy into `copied/private-report.txt`
-- [ ] Destination-object SSE-KMS validation
-- [ ] Normal private Object URL denied
-- [ ] Controlled public-policy denial while BPA remains on
-- [ ] Presigned access success without showing the URL
-- [ ] Presigned access failure after expiry
-- [ ] Enabled `logs-transition-and-cleanup` lifecycle timeline
-- [ ] Object Lock enabled and Legal Hold on the exact version
-- [ ] Controlled delete denial and successful cleanup after Legal Hold off
-- [ ] Day 11 architecture and decision table
-- [ ] Complete cleanup evidence and Day 11 LinkedIn link
+- [x] Source: Bucket owner enforced, BPA on, versioning, and SSE-S3
+- [x] Destination: BPA on, versioning, SSE-KMS, correct KMS key, and Bucket Key
+- [x] Standard and Intelligent-Tiering object properties
+- [x] Two version IDs and a delete marker
+- [x] Recovered object after deleting only the delete marker
+- [x] Successful manual copy into `copied/private-report.txt`
+- [x] Destination-object SSE-KMS validation
+- [x] Normal private Object URL denied
+- [x] Controlled public-policy denial while BPA remains on
+- [x] Presigned access success without showing the URL
+- [x] Presigned access failure after expiry
+- [x] Enabled `logs-transition-and-cleanup` lifecycle timeline
+- [x] Object Lock enabled and Legal Hold on the exact version
+- [x] Controlled delete denial and successful cleanup after Legal Hold off
+- [x] Day 11 architecture and decision table
+- [x] Complete cleanup evidence and Day 11 LinkedIn link
 
 ## Day 12 Evidence Checklist
 
-- [ ] Three private, versioned SSE-S3 buckets in the intended Regions
-- [ ] Enabled `srr-prefix-rule` and `crr-prefix-rule`
-- [ ] SRR source `COMPLETED` and destination `REPLICA` evidence
-- [ ] SRR destination contains Versions 1 and 2
-- [ ] CRR source `COMPLETED` and destination `REPLICA` evidence
-- [ ] CRR destination contains Versions 1 and 2
-- [ ] `srr/before-rule.txt` and `crr/before-rule.txt` remain source-only
-- [ ] `other/no-replication-demo.txt` remains source-only
-- [ ] Transfer Acceleration configuration reviewed
-- [ ] Seven-day incomplete multipart cleanup rule
-- [ ] Existing EFS configuration and TCP `2049` review
-- [ ] FSx family and hybrid-storage decision table
-- [ ] Optional Compliance denial and pending-cleanup note, if performed
-- [ ] Optional website and error page plus restored BPA, if performed
-- [ ] Complete Day 12 cleanup and LinkedIn link
+- [x] Three private, versioned SSE-S3 buckets in the intended Regions
+- [x] Enabled `srr-prefix-rule` and `crr-prefix-rule`
+- [x] SRR source `COMPLETED` and destination `REPLICA` evidence
+- [x] SRR destination contains Versions 1 and 2
+- [x] CRR source `COMPLETED` and destination `REPLICA` evidence
+- [x] CRR destination contains Versions 1 and 2
+- [x] `srr/before-rule.txt` and `crr/before-rule.txt` remain source-only
+- [x] `other/no-replication-demo.txt` remains source-only
+- [x] Transfer Acceleration configuration reviewed
+- [x] Seven-day incomplete multipart cleanup rule
+- [x] Existing EFS configuration and TCP `2049` review
+- [x] FSx family and hybrid-storage decision table
+- [x] Optional Compliance denial and pending-cleanup note, if performed
+- [x] Optional website and error page plus restored BPA, if performed
+- [x] Complete Day 12 cleanup and LinkedIn link
