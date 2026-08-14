@@ -311,7 +311,10 @@
 
 
 ## Architecture Decision
-Write 250-400 words.
+
+### Day 11 Architecture Diagram
+
+   ![snapshot](./day11-architecture.png)
 
 ## Cleanup
 
