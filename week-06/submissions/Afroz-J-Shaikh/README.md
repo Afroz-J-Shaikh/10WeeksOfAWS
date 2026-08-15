@@ -316,6 +316,28 @@
 
    ![snapshot](./day11-architecture.png)
 
+   #### Architecture Overview
+
+   - **Classification & access:** Source bucket holds mixed-sensitivity objects (e.g., private reports); access governed entirely via IAM/bucket policy — no per-object ACLs.
+   - **Private buckets, ACLs disabled:** Block Public Access + Bucket Owner Enforced remove ACL-based misconfiguration risk; all authorization flows through policy.
+   - **Encryption:** Source uses SSE-S3 (no key management overhead); destination copy uses SSE-KMS for auditable, customer-managed key control.
+   - **Versioning vs. lifecycle vs. Object Lock:** Versioning makes deletes recoverable (delete marker, not real removal). Lifecycle controls cost — ages Standard-IA → Glacier → expiry, cleans incomplete multipart uploads. Object Lock (Legal Hold) adds immutability — deletion denied until the hold is released, independent of lifecycle/versioning.
+   - **Presigned URLs:** Temporary, scoped, credential-tied authorization — not public access. Plain object URL stays denied throughout, proving bucket privacy holds.
+   - **Manual copy limitation:** One-time snapshot; later uploads/deletes in source aren't reflected in destination — no continuous sync, which is why replication is needed.
+
+### Day 12 Architecture Diagram
+
+   ![snapshot](./day12-architecture.png)
+
+   #### Architecture Overview
+
+   - **Public vs. private split:** Static site objects served publicly only via scoped S3:GetObject policy through the website endpoint; direct object URL access still denied — public serving without public storage.
+   - **Prefix-based replication rules (SRR/CRR):** Two rules scoped by prefix on the same source bucket — srr/ replicates to a same-region destination for data residency/compliance and workload isolation, while crr/ replicates to a cross-region destination (Tokyo) for disaster recovery and geographic redundancy — each with its own IAM role, letting different object sets route to different destinations without duplicating the whole bucket.
+   - **SRR (Same Region Replication):** Keeps a live copy within the same region — used for data residency/compliance, workload isolation between teams, and reducing cross-team access to the source bucket.
+   - **CRR (Cross Region Replication):** Replicates to a different region (Tokyo) — provides disaster recovery, geographic redundancy, and lower latency for users closer to the destination region.
+   - **Batch Replication:** One-time job to replicate objects that existed before a live replication rule was created — live SRR/CRR rules only replicate new writes going forward, so Batch Replication backfills the historical gap.
+   - **Abort Incomplete Multipart Uploads:** Lifecycle rule that automatically deletes incomplete multipart upload parts after a set period (e.g., 7 days) — prevents orphaned part storage from silently accumulating cost.
+
 ## Cleanup
 
 - All buckets emptied and deleted except Object Lock Compliance:
