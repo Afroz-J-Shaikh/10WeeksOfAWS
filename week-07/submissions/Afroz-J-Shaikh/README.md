@@ -38,55 +38,55 @@
 
    - Manual Snapshot
 
-   ![snapshot](./evidence/day13-rds-aurora/snap-manual.png)
+      ![snapshot](./evidence/day13-rds-aurora/snap-manual.png)
 
    - Automated Snapshot
 
-   ![snapshot](./evidence/day13-rds-aurora/snap-auto.png)
+      ![snapshot](./evidence/day13-rds-aurora/snap-auto.png)
 
    - Verify the training table's engine
 
-   ![snapshot](./evidence/day13-rds-aurora/running-engine.png)
+      ![snapshot](./evidence/day13-rds-aurora/running-engine.png)
 
 - PITR marker window and restore result:
 
    - Adding record
 
-   ![snapshot](./evidence/day13-rds-aurora/pitr-before-del.png)
+      ![snapshot](./evidence/day13-rds-aurora/pitr-before-del.png)
 
    - Deleting record after 2 minutes
 
-   ![snapshot](./evidence/day13-rds-aurora/pitr-after-del.png)
+      ![snapshot](./evidence/day13-rds-aurora/pitr-after-del.png)
 
    - PITR created new database and deleted record `PITR Marker` is recovered
 
-   ![snapshot](./evidence/day13-rds-aurora/pitr-created.png)
+      ![snapshot](./evidence/day13-rds-aurora/pitr-created.png)
 
    - Source still has no record of `PITR Marker`
 
-   ![snapshot](./evidence/day13-rds-aurora/pitr-src.png)
+      ![snapshot](./evidence/day13-rds-aurora/pitr-src.png)
 
 - Read replica and read-only validation:
 
    - Created Read Replica
 
-   ![snapshot](./evidence/day13-rds-aurora/rep-av.png)
+      ![snapshot](./evidence/day13-rds-aurora/rep-av.png)
 
    - Added new record in source db
 
-   ![snapshot](./evidence/day13-rds-aurora/new-rec-src.png)
+      ![snapshot](./evidence/day13-rds-aurora/new-rec-src.png)
 
    - Recorded visible in replica db
 
-   ![snapshot](./evidence/day13-rds-aurora/rep-sync.png)
+      ![snapshot](./evidence/day13-rds-aurora/rep-sync.png)
 
-   ![snapshot](./evidence/day13-rds-aurora/rep1.png)
+      ![snapshot](./evidence/day13-rds-aurora/rep1.png)
 
-   ![snapshot](./evidence/day13-rds-aurora/rep2.png)
+      ![snapshot](./evidence/day13-rds-aurora/rep2.png)
 
    - Write fails in replica db
 
-   ![snapshot](./evidence/day13-rds-aurora/rep-fail.png)
+      ![snapshot](./evidence/day13-rds-aurora/rep-fail.png)
 
 - Multi-AZ decision:
  
@@ -96,59 +96,59 @@
 
    - Aurora Database Created
 
-   ![snapshot](./evidence/day13-rds-aurora/aurora.png)
+      ![snapshot](./evidence/day13-rds-aurora/aurora.png)
 
    - Aurora Cluster, Reader Innstance, Writer Instance
 
-   ![snapshot](./evidence/day13-rds-aurora/aurora-all.png)
+      ![snapshot](./evidence/day13-rds-aurora/aurora-all.png)
 
    - Writer and Reader instance endpoints
 
-   ![snapshot](./evidence/day13-rds-aurora/aurora-endpoints.png)
+      ![snapshot](./evidence/day13-rds-aurora/aurora-endpoints.png)
 
   - Validate Aurora Writer
 
-  ![snapshot](./evidence/day13-rds-aurora/writer.png)
+     ![snapshot](./evidence/day13-rds-aurora/writer.png)
 
-  ![snapshot](./evidence/day13-rds-aurora/writer1.png)
+     ![snapshot](./evidence/day13-rds-aurora/writer1.png)
 
   - Validate Aurora Reader
 
-  ![snapshot](./evidence/day13-rds-aurora/reader.png)
+     ![snapshot](./evidence/day13-rds-aurora/reader.png)
 
 - Aurora cross-AZ failover result:
 
    - Writer instance before failover
 
-   ![snapshot](./evidence/day13-rds-aurora/w-before-fail.png)
+      ![snapshot](./evidence/day13-rds-aurora/w-before-fail.png)
 
    - Writer instance after failover
 
-   ![snapshot](./evidence/day13-rds-aurora/writer-cli.png)
+      ![snapshot](./evidence/day13-rds-aurora/writer-cli.png)
 
-   ![snapshot](./evidence/day13-rds-aurora/writer-cli1.png)
+      ![snapshot](./evidence/day13-rds-aurora/writer-cli1.png)
 
    - Reader-Writer instances before fail
 
-   ![snapshot](./evidence/day13-rds-aurora/state-before-fail.png)
+      ![snapshot](./evidence/day13-rds-aurora/state-before-fail.png)
 
    - Reader-Writer instances after fail
 
-   ![snapshot](./evidence/day13-rds-aurora/state-after-fail.png)
+      ![snapshot](./evidence/day13-rds-aurora/state-after-fail.png)
 
 - RDS Proxy target health and endpoint validation:
 
    - Proxy Created
 
-   ![snapshot](./evidence/day13-rds-aurora/proxy.png)
+      ![snapshot](./evidence/day13-rds-aurora/proxy.png)
 
    - Read/Write Endpoints
 
-   ![snapshot](./evidence/day13-rds-aurora/proxy-endpoints.png)
+      ![snapshot](./evidence/day13-rds-aurora/proxy-endpoints.png)
 
    - Target health
 
-   ![snapshot](./evidence/day13-rds-aurora/proxy-target.png)
+      ![snapshot](./evidence/day13-rds-aurora/proxy-target.png)
 
 - RDS Proxy Read/Write Endpoint
 
@@ -170,33 +170,33 @@
 
    - Dedicated Backup User and Secret Created
 
-       ![snapshot](./evidence/day13-rds-aurora/secret-created.png)
+      ![snapshot](./evidence/day13-rds-aurora/secret-created.png)
 
-    - System Manager -> Fleet Manager
+   - System Manager -> Fleet Manager
 
-       ![snapshot](./evidence/day13-rds-aurora/fleet.png)
+      ![snapshot](./evidence/day13-rds-aurora/fleet.png)
 
-    - Managed Node Pre-requisite
+   - Managed Node Pre-requisite
 
-       ![snapshot](./evidence/day13-rds-aurora/pre-req.png)
+      ![snapshot](./evidence/day13-rds-aurora/pre-req.png)
 
-    - The SSM Command Document created
+   - The SSM Command Document created
 
-       ![snapshot](./evidence/day13-rds-aurora/doc-created.png)
+      ![snapshot](./evidence/day13-rds-aurora/doc-created.png)
 
    - SSM table-backup Run Command result:
 
       - Command Run Result
 
-      ![snapshot](./evidence/day13-rds-aurora/com-suc.png)
+         ![snapshot](./evidence/day13-rds-aurora/com-suc.png)
 
       - Verified S3 contains backup
 
-      ![snapshot](./evidence/day13-rds-aurora/s3-backup.png)
+         ![snapshot](./evidence/day13-rds-aurora/s3-backup.png)
 
       - Validate in EC2
 
-      ![snapshot](./evidence/day13-rds-aurora/ec2-validate.png)
+         ![snapshot](./evidence/day13-rds-aurora/ec2-validate.png)
 
 - State Manager schedule and repeated backup result:
 
@@ -234,7 +234,7 @@
 
       ![snapshot](./evidence/day13-rds-aurora/restore3.png)
 
-    - Temporary schema and local files are removed
+   - Temporary schema and local files are removed
 
       ![snapshot](./evidence/day13-rds-aurora/restore4.png)
 
