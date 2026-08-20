@@ -268,21 +268,21 @@
 
    - The table currently has one region, as the replication is disabled.
 
-   1. Multi-Region availability -
+   - **Multi-Region availability -**
      Global Tables replicate your table across multiple Regions (e.g., ap-south-1(Mumbai replica) + ap-southeast-1(Singapore replica)). If a whole Region goes down, the app can fail over to a replica elsewhere — protection beyond just AZ-level failure.
 
-   2. Local access for global users -
+   - **Local access for global users -**
      Without replication, all users hit one Region, so distant users pay cross-Region latency on every request. A local replica lets nearby users read/write to a nearby copy, cutting latency significantly.
 
-   3. Multi-Region writes -
+   - **Multi-Region writes -**
      Unlike typical "read replica" setups, Global Tables accept writes in every Region. A user in Mumbai and one in Singapore can both write locally, and DynamoDB propagates changes across all replicas automatically.
 
-   4. Replicated write, storage and data-transfer considerations -
+   - **Replicated write, storage and data-transfer considerations -**
      Every write gets copied to every replica Region — multiplying write-capacity cost (N Regions ≈ N× writes). You also pay storage in each Region plus inter-Region data-transfer fees. A 3-Region table isn't "free" multi-Region — it's roughly 3x cost.
 
-   5. MREC vs MRSC -
+   - **MREC vs MRSC -**
 
-      | Mode |	Full name | Behavior |
+      | **Mode** | **Full name** | **Behavior** |
       |---|---|---|
       | MREC | Multi-Region Eventual Consistency | Default; writes propagate async, replicas may briefly lag |
       | MRSC | Multi-Region Strong Consistency | Newer; strongly consistent cross-Region reads, but doesn't support TTL/LSI — use a separate empty table |
@@ -324,7 +324,7 @@
 
    ![snapshot](../evidence/day14-database-caching/redis.png)
 
-   | Requirement | Choose |
+   | **Requirement** | **Choose** |
    |---|---|
    | Leaderboard or sorted sets | Redis OSS/Valkey |
    | Sessions | Redis OSS/Valkey |
