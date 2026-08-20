@@ -14,14 +14,14 @@
 
 - Access patterns and key design:
 
-| Access pattern | Key design |
-|---|---|
-| Customer profile | `PK=CUSTOMER#C101`, `SK=PROFILE` |
-| Customer orders | `PK=CUSTOMER#C101`, `SK=ORDER#time#id` |
-| Order by order ID | `GSI1PK=ORDER#id` |
-| Customer orders by status | Same `PK`, `LSI1SK=STATUS#status#time` |
-| Temporary session | `ExpiresAt` numeric TTL |
-| React to update | Stream with old/new images |
+   | Access pattern | Key design |
+   |---|---|
+   | Customer profile | `PK=CUSTOMER#C101`, `SK=PROFILE` |
+   | Customer orders | `PK=CUSTOMER#C101`, `SK=ORDER#time#id` |
+   | Order by order ID | `GSI1PK=ORDER#id` |
+   | Customer orders by status | Same `PK`, `LSI1SK=STATUS#status#time` |
+   | Temporary session | `ExpiresAt` numeric TTL |
+   | React to update | Stream with old/new images |
 
 
 ### PART A - BUILD
@@ -282,10 +282,10 @@
 
    5. MREC vs MRSC -
 
-   | Mode |	Full name | Behavior |
-   |---|---|---|
-   | MREC | Multi-Region Eventual Consistency | Default; writes propagate async, replicas may briefly lag |
-   | MRSC | Multi-Region Strong Consistency | Newer; strongly consistent cross-Region reads, but doesn't support TTL/LSI — use a separate empty table |
+     | Mode |	Full name | Behavior |
+     |---|---|---|
+     | MREC | Multi-Region Eventual Consistency | Default; writes propagate async, replicas may briefly lag |
+     | MRSC | Multi-Region Strong Consistency | Newer; strongly consistent cross-Region reads, but doesn't support TTL/LSI — use a separate empty table |
 
 - DAX decision:
 
@@ -360,8 +360,6 @@
 - IAM Roles
 
    ![snapshot](../evidence/cleanup/roles.png)
-
-   ![snapshot](../evidence/cleanup/functions.png)
 
 ## Architecture Decision
 Write 250-400 words.
