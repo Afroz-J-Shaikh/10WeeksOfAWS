@@ -282,10 +282,10 @@
 
    5. MREC vs MRSC -
 
-     | Mode |	Full name | Behavior |
-     |---|---|---|
-     | MREC | Multi-Region Eventual Consistency | Default; writes propagate async, replicas may briefly lag |
-     | MRSC | Multi-Region Strong Consistency | Newer; strongly consistent cross-Region reads, but doesn't support TTL/LSI — use a separate empty table |
+      | Mode |	Full name | Behavior |
+      |---|---|---|
+      | MREC | Multi-Region Eventual Consistency | Default; writes propagate async, replicas may briefly lag |
+      | MRSC | Multi-Region Strong Consistency | Newer; strongly consistent cross-Region reads, but doesn't support TTL/LSI — use a separate empty table |
 
 - DAX decision:
 
