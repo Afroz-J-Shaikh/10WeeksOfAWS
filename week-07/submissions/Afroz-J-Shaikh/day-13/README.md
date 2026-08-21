@@ -240,21 +240,42 @@
 
       ![snapshot](../evidence/day13-rds-aurora/restore5.png)
 
-## Day 14
-- Access patterns and key design:
-- Base-table Query result:
-- GSI and LSI validation:
-- On-demand versus provisioned decision:
-- TTL configuration and expiry explanation:
-- Stream and Lambda old/new image result:
-- Temporary UI demonstration:
-- Global Tables decision:
-- DAX decision:
-- Valkey/Redis OSS versus Memcached decision:
-- Troubleshooting lesson:
 
 ## Architecture Decision
-Write 250-400 words.
+
+### First
+
+   ![snapshot](../day13-snapshot-architecture.png)
+
+   #### Overview
+
+   - **Backup layer runs outside the VPC, feeding S3** — Automated Backups and Manual Snapshots both write to S3 (AWS-managed, replicated across 3 AZs). The PITR DB shows a live recovery example: restoring from a point 2 minutes before a record deletion — the core value of continuous automated backups over static snapshots.
+   - **Two independent replication paths from SOURCE**, serving different purposes — the Multi-AZ Standby uses synchronous replication (zero data loss, failover-only, not readable), while the Read Replica uses asynchronous replication (slight lag possible, but readable and used for scaling reads). Same source DB, two very different jobs.
+   - **App tier reaches the DB only through defined security group rules** — EC2 security group has zero inbound and only outbound HTTP/HTTPS/MySQL/DNS; the RDS security group accepts MySQL only from that EC2 security group. No CIDR-based access anywhere near the database.
+   - **Admin and credential access go through private VPC endpoints**, not the internet — Secrets Manager and Session Manager both terminate on interface endpoints inside the VPC, with TLS enforced on both paths. This is what lets you avoid a bastion host entirely while still giving admins reach into the private subnets.
+   - **Public subnets exist only for NAT egress**, never for the database — Public subnets A and B hold NAT Gateways (for the app tier's outbound internet access) and route to the IGW; all four database instances (SOURCE, PITR DB, Standby, Read Replica) live exclusively in the private subnets across both AZs.
+
+### Second
+
+   ![snapshot](../day13-restore-architecture.gif)
+
+   #### Overview
+
+   - **Automation is scheduled, not manual** — SSM State Manager triggers an SSM Command Document on a rate schedule, which runs a logical DB Dump on the SOURCE MySQL instance via the managed EC2 instance using BackUp User.
+   - **Backup egress uses a Gateway VPC endpoint, not the NAT gateway** — the dump is pushed to S3 through the Gateway Endpoint (GetObject/PutObject over HTTPS). This keeps backup traffic off the public internet path entirely and avoids NAT data-processing charges.
+   - **The restore/validation loop closes on the standby side** — in AZ-b, the backup gets pulled back down from S3 to a second app node, which validates the dump against the Multi-AZ Standby — essentially a restore-drill loop proving the backups are actually usable, not just written.
+
+### Third
+
+   ![snapshot](../day13-aurora-architecture.gif)
+
+   #### Overview
+
+   - **Writer instance comes first, created together with the cluster** — running "Create database" for Aurora provisions the DB cluster and its first instance in one step, and that instance is automatically assigned the writer role. It's the only instance that accepts writes.
+   - **Reader instance is added afterward, as a second compute node on the same cluster** — "Add reader" creates a separate instance (placed in a different AZ) that comes up read-only by default. It isn't a separate database — it's just another compute layer pointed at the same data.
+   - **The shared Cluster Volume Storage** actually exists underneath both — Aurora auto-creates a distributed, 6-way-replicated storage volume across 3 AZs the moment the cluster is created, and every instance (writer or reader) attaches to that same volume rather than holding its own copy. This is why writes on the writer show up on readers almost instantly.
+   - **RDS Proxy is added last, sitting logically above the data layer** — it's only created once the cluster and instances already exist, and it points at the cluster (not individual instances), auto-discovering the current writer/reader endpoints from cluster metadata.
+   - **FailOver** — since the proxy tracks the cluster's live endpoints rather than a fixed instance, a writer failover (a reader getting promoted) is handled transparently without the app needing any connection-string change. Writer becomes reader and reader becomes writer.
 
 ## Cleanup
 - RDS source, replica, and restore:
@@ -290,11 +311,6 @@ Write 250-400 words.
    ![snapshot](../evidence/cleanup/s3.png)
 
    ![snapshot](../evidence/cleanup/iam.png)
-
-- DynamoDB tables and indexes:
-- Lambda functions, trigger, Function URL, and log groups:
-- Global Tables, DAX, and ElastiCache:
-- Regions checked:
 
 ## Reflection
 1. Why is Multi-AZ different from a read replica?
