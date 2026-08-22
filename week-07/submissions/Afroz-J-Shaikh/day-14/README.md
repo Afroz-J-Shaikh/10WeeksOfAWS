@@ -362,5 +362,21 @@
    ![snapshot](../evidence/cleanup/roles.png)
 
 ## Architecture Decision
-Write 250-400 words.
+
+   ![snapshot](../day14-dynamodb-architecture.png)
+
+   This architecture is a **serverless AWS-based Orders application** designed for simplicity, scalability, and event-driven processing.
+
+   1. **Orders Dashboard** – Users access the dashboard, which communicates with an **AWS Lambda function through a Lambda Function URL** over HTTPS. The Lambda function handles order operations such as creating, retrieving, updating, and deleting orders.
+
+   2. **DynamoDB Orders Table** – Stores order data using **PK (Partition Key)** and **SK (Sort Key)**, along with **GSI1 (Global Secondary Index)** and **LSI1 (Local Secondary Index)** for additional query patterns.
+
+   3. **DynamoDB Streams** – Captures **INSERT, MODIFY, and REMOVE** events from the Orders Table. The stream uses **NEW_AND_OLD_IMAGES** to capture both previous and updated item data.
+
+   4. **Stream Consumer Lambda** – Processes DynamoDB Stream events asynchronously for background processing.
+
+   5. **CloudWatch Logs** – Both Lambda functions send execution and application logs to **Amazon CloudWatch Logs** for monitoring and troubleshooting.
+
+   6. **Overall Flow** – **Orders Dashboard → Lambda Function URL → Lambda → DynamoDB → DynamoDB Streams → Stream Consumer Lambda → CloudWatch Logs**.
+
 

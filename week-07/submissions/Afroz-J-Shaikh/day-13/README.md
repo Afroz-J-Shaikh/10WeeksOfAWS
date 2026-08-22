@@ -311,10 +311,3 @@
    ![snapshot](../evidence/cleanup/s3.png)
 
    ![snapshot](../evidence/cleanup/iam.png)
-
-## Reflection
-1. Why is Multi-AZ different from a read replica?
-2. Which recovery option best matches an accidental row deletion, and why?
-3. When would you choose Aurora or DMS instead of basic RDS MySQL?
-4. Why must a DynamoDB design begin with access patterns?
-5. When should you choose a GSI, an LSI, DAX, or ElastiCache?
