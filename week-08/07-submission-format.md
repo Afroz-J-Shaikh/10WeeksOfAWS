@@ -52,7 +52,12 @@ week-08/submissions/<github-username>/
 - Source backup result:
 - Cross-Region copy result:
 - Restore and application-validation result:
+- `/health` result and IMDSv2 Region/instance-ID proof:
+- Source versus restored instance ID:
+- AWS Backup service-role policy check:
 - Measured recovery observations:
+- Achieved RTO milestone calculation:
+- Achieved RPO recovery-point calculation:
 - Target-Region dependency/quota finding:
 - Troubleshooting lesson:
 
@@ -98,15 +103,17 @@ Write 300-500 words.
 
 ## Day 16 Evidence Checklist
 
-- [ ] Encrypted Mumbai EC2 source and synthetic marker
+- [ ] Encrypted Mumbai EC2 source, `/health`, metadata, and synthetic marker
+- [ ] Backup role has approved backup and restore policies, not admin access
 - [ ] RTO, RPO, and backup/restore strategy statement
 - [ ] Target-Region network, quota, KMS, and dependency check
 - [ ] Completed source backup job and recovery point
 - [ ] Completed cross-Region copy job
 - [ ] Destination vault contains encrypted copied recovery point
 - [ ] Completed restore job and distinct restored instance
-- [ ] Restored page contains the expected synthetic marker
-- [ ] Actual timing compared with target RTO/RPO
+- [ ] Restored page shows DR success, `us-east-1`, new ID, and marker
+- [ ] Restored `/health` returns `healthy`; IMDSv2 confirms Region and ID
+- [ ] Detection-to-cutover RTO and latest-usable-copy RPO are calculated
 - [ ] VPN/Direct Connect, TGW, Resolver, and endpoint decisions
 - [ ] Optional private DNS/endpoint/failover evidence clearly marked optional
 - [ ] Cleanup proof in both Regions and Day 16 public-post link

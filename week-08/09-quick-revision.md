@@ -46,6 +46,13 @@
 12. A completed restore still requires application and data validation.
 13. Target-Region quotas, KMS, network, IAM, secrets, and dependencies matter.
 14. Restore creates new resources rather than overwriting the source.
+15. A restored boot service can query IMDSv2 and render the new Region and
+    instance ID; copied static text alone is weak recovery proof.
+16. A `/health` response, page content, and metadata validate different layers.
+17. Inter-Region TGW peering uses static routes and provides reachability, not
+    workload or backup replication.
+18. Achieved RTO includes detection through validation and traffic cutover;
+    achieved RPO uses the latest usable recovery point at incident time.
 
 ## Decision Table
 
@@ -81,9 +88,14 @@
 - A healthy network endpoint does not prove the application is correct.
 - Direct Connect alone does not guarantee encryption or resilience.
 - A TGW attachment needs correct TGW and VPC route tables.
+- TGW peering is not required for AWS Backup cross-Region copy.
+- `AdministratorAccess` is not a substitute for the approved AWS Backup service
+  role policies.
 - A backup in only the failed Region may not meet a Regional disaster goal.
 - `Completed` restore means infrastructure recovery finished, not that the
   workload passed business validation.
+- In backup-and-restore DR, validate the restored endpoint before creating or
+  updating the Route 53 secondary; DNS cannot restore the workload.
 - Terminating EC2 does not delete AWS Backup recovery points.
 
 ## Practice Questions

@@ -3,6 +3,10 @@
 Draw two production-oriented diagrams: one for the Day 15 global-delivery path
 and one for the Day 16 hybrid-connectivity and disaster-recovery path.
 
+Use the supplied [hybrid and multi-Region DR reference architecture](./Hybrid%20Conectivity%20and%20Multi%20region%20disaster%20recovery.png)
+as a learning reference. Redraw it with your own labels and decisions; do not
+present the supplied image as your personal deliverable.
+
 ## Diagram 1 - Edge Delivery and Security
 
 - Users and authoritative DNS
@@ -28,6 +32,7 @@ and one for the Day 16 hybrid-connectivity and disaster-recovery path.
 - Mumbai AWS Backup vault and completed recovery point
 - Cross-Region copy to a KMS-encrypted N. Virginia vault
 - Restored EC2, target VPC/subnet/SG, validation, and traffic cutover
+- Dynamic `/health` plus IMDSv2 Region and restored instance-ID validation
 - Monitoring, alarms, logs, backup/copy/restore jobs, and cost controls
 
 ## Required Annotations
@@ -39,8 +44,11 @@ Label:
 3. Health-check direction and where DNS caching can extend failover time.
 4. Hybrid routes in both directions and whether transport is encrypted.
 5. Backup completion, cross-Region copy, restore, validation, and DNS cutover.
-6. Workload RTO and RPO plus the assumptions used to calculate them.
-7. Services created hands-on versus design-only services.
+6. Detection, declaration, orchestration, restore, configuration, validation,
+   and DNS cutover as separate RTO milestones.
+7. The latest usable copied recovery point used for achieved RPO.
+8. Regional TGWs/peering as reachability, separate from AWS Backup data copy.
+9. Services created hands-on versus design-only services.
 
 ## Decision Table
 

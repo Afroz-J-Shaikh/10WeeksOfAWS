@@ -28,6 +28,21 @@ other supported networks. An attachment associates with one TGW route table
 for ingress routing and may propagate routes into one or more route tables.
 Static and blackhole routes support deliberate segmentation and failure
 control. VPC route tables must also send the intended CIDRs to the TGW.
+Transit Gateway is Regional. Connecting Mumbai and N. Virginia requires
+inter-Region TGW peering and static routes on both TGWs. Peering provides
+reachability; it does not copy workloads, EBS data, backups, or DNS records.
+AWS Backup cross-Region copy works independently of TGW peering.
+
+## Keep the Responsibilities Separate
+
+| Requirement | Responsible service or stage |
+|---|---|
+| Encrypted rapid hybrid connectivity | Site-to-Site VPN |
+| Predictable private circuit | Direct Connect |
+| Routing among many attached networks | Transit Gateway |
+| Hybrid name resolution | Route 53 Resolver |
+| Recovery point, copy, and restore | AWS Backup |
+| Health-based application traffic choice | Route 53 |
 
 ## Hybrid DNS and Private AWS Access
 
@@ -59,6 +74,15 @@ still costs money.
 These labels do not guarantee an RTO or RPO. Measure backup frequency,
 replication lag, copy completion, infrastructure deployment, data restore,
 DNS behavior, validation, and operational decision time.
+
+```text
+Achieved RTO = detection + declaration + orchestration + restore
+               + configuration + validation + traffic cutover
+Achieved RPO = incident time - latest usable recovery-point time
+```
+
+Detection, recovery, validation, and cutover are separate milestones. A restore
+job marked `Completed` proves infrastructure recovery, not application health.
 
 ## AWS Backup Cross-Region Recovery
 
@@ -104,3 +128,6 @@ behavior before routing production traffic.
 - [AWS disaster recovery strategies](https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html)
 - [AWS Backup cross-Region copies](https://docs.aws.amazon.com/aws-backup/latest/devguide/cross-region-backup.html)
 - [Restoring EC2 with AWS Backup](https://docs.aws.amazon.com/aws-backup/latest/devguide/restoring-ec2.html)
+- [Centralized Transit Gateway deployment](https://docs.aws.amazon.com/prescriptive-guidance/latest/integrating-third-party-firewall-appliances/centralized-deployment-model.html)
+- [Hybrid DNS pattern](https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/set-up-dns-resolution-for-hybrid-networks-in-a-multi-account-aws-environment.html)
+- [Inter-Region TGW peering automation](https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/automate-aws-transit-gateway-peering-attachments-in-a-multi-region-organization.html)

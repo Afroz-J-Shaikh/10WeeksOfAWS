@@ -30,6 +30,7 @@ Architecture references:
 
 - [CloudFront private content and edge security](./%23%20CloudFront%20Private%20Content%20and%20Edge%20Security.png)
 - [Route 53 multi-Region active-passive failover](./%23%20Route%2053%20Multi-Region%20Active-Passive%20Failover.png)
+- [Hybrid connectivity and multi-Region disaster recovery](./Hybrid%20Conectivity%20and%20Multi%20region%20disaster%20recovery.png)
 - [Day 15 sample origin page](./index.html)
 
 ## Learner Naming
@@ -95,6 +96,8 @@ an approved design-only exception.
 - Create an encrypted EC2 workload and on-demand AWS Backup recovery point.
 - Copy the recovery point from Mumbai to N. Virginia.
 - Restore a new EC2 instance and validate the recovered application and data.
+- Prove `/health`, the current Region, and the new instance ID using IMDSv2.
+- Calculate achieved RTO/RPO from detection through validation and cutover.
 - Explain optional Route 53 failover to the recovered workload.
 
 ## Day 16 Architecture
