@@ -555,6 +555,31 @@ Open the complete returned URL. Expect `200`. Do not publish the URL. After
 expiry, confirm the same URL returns `403`, then securely remove the private
 key from CloudShell before cleanup.
 
+### Optional signed-cookie extension
+
+Signed cookies are optional because the minimum challenge protects one object.
+If implementing them, keep the same trusted key group and use a short custom
+policy that authorizes only:
+
+```text
+https://<DISTRIBUTION-DOMAIN>/private/*
+```
+
+The signing application creates three cookie values: `CloudFront-Policy`,
+`CloudFront-Signature`, and `CloudFront-Key-Pair-Id`. Set them as Secure cookies
+and avoid logging or publishing them. Validate in a private browser session:
+
+1. clear any old CloudFront signed cookies;
+2. prove a private object fails without authorization;
+3. set the three freshly generated cookies;
+4. open two different objects under `private/*` without URL query signatures;
+5. wait for expiry and prove access fails again; and
+6. clear the cookies after the demonstration.
+
+Do not reuse a signed-URL canned policy as if it were a cookie policy. In a
+production application, the backend issues cookies only after authenticating
+and authorizing the user.
+
 ## Part G - Attach Your ACM Certificate and DNS Name
 
 After the certificate is **Issued**:
@@ -685,6 +710,23 @@ request ratio because resolver caching affects viewers.
 
 Change the weights to `50/50`, repeat the authoritative queries, and compare
 the observations. A small sample will not always be exactly proportional.
+
+### Optional latency-routing comparison
+
+Create this only if the additional records fit the lab time. Create two `A`
+records named `latency.<LAB-ZONE>`:
+
+| Setting | Mumbai record | N. Virginia record |
+|---|---|---|
+| Routing policy | Latency | Latency |
+| Value | `<PRIMARY-IP>` | `<SECONDARY-IP>` |
+| Region | Asia Pacific (Mumbai) | US East (N. Virginia) |
+| Record ID | `Mumbai-Latency` | `Virginia-Latency` |
+| Health check | Primary check | Secondary check |
+
+Query from different networks/resolvers where available and explain that the
+policy uses AWS's latency measurements from the DNS resolver location. It is
+not a fixed country-to-Region mapping. Delete the optional records in cleanup.
 
 ### Create the active-passive failover records
 

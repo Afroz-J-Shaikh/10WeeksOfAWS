@@ -352,6 +352,119 @@ Complete these without creating the services:
 | Reduced complete environment | Warm standby / other |
 | Both Regions serve traffic | Active-active / other |
 
+## Design-Only Console Walkthroughs
+
+Inspect these console areas and complete the worksheets without choosing the
+final **Create** button. These services can incur hourly, attachment, endpoint,
+port-hour, query, or data-processing charges.
+
+### Site-to-Site VPN form
+
+Open **VPC → Customer gateways → Create customer gateway** and identify:
+
+- the on-premises router's stable public IP;
+- BGP ASN for dynamic routing or the static-routing decision;
+- device/certificate-based authentication options where available; and
+- the difference between the AWS customer-gateway resource and the physical
+  customer device.
+
+Then inspect **Virtual private gateways** or the Transit Gateway attachment
+path. Finally open **Site-to-Site VPN connections → Create VPN connection** and
+record:
+
+```text
+Target gateway type: VGW or TGW
+Customer gateway:    learner's design value
+Routing:             dynamic BGP or static prefixes
+Tunnel options:      two tunnels, inside CIDRs, IKE/IPsec choices
+```
+
+Do not create the VPN without a real or instructor-approved customer gateway.
+A resilient design configures and monitors both AWS-managed tunnels and avoids
+overlapping CIDRs.
+
+### Direct Connect form
+
+Open **Direct Connect → Connections → Create a connection** and identify the
+location, port speed, service-provider/hosted-connection path, and lead time.
+Do not order a circuit.
+
+Open **Virtual interfaces** and compare:
+
+| VIF | Reaches | Gateway relationship |
+|---|---|---|
+| Private VIF | VPC private addresses | VGW or Direct Connect gateway |
+| Public VIF | AWS public service prefixes | Direct Connect gateway optional |
+| Transit VIF | One or more Transit Gateways | Direct Connect gateway required |
+
+Document that Direct Connect is private connectivity but not end-to-end IPsec
+encryption by default. A design that needs encryption can run VPN over Direct
+Connect where supported and appropriate.
+
+### Transit Gateway form and route tables
+
+Open **VPC → Transit Gateways**, **Transit Gateway attachments**, and **Transit
+Gateway route tables**. Without creating resources, map:
+
+1. a Mumbai VPC attachment;
+2. a DR VPC attachment;
+3. a VPN or Direct Connect gateway path;
+4. the one TGW route-table association used for ingress lookup by each
+   attachment;
+5. the route tables into which each attachment propagates routes;
+6. any deliberate static or blackhole route; and
+7. the matching subnet/VPC route-table entries required on both sides.
+
+Association, propagation, VPC routes, and on-premises routes are different
+configuration layers. A TGW attachment alone does not create end-to-end reachability.
+
+### Route 53 Resolver forms
+
+Open **Route 53 Resolver → Inbound endpoints** and identify two subnets in
+different AZs, Security Group UDP/TCP 53 rules from the on-premises resolver,
+and the endpoint IPs to which on-premises DNS would forward AWS-private zones.
+
+Open **Outbound endpoints** and **Rules**. Record the on-premises target DNS IPs,
+domain suffix, UDP/TCP 53 path, VPC rule associations, and sharing decision.
+
+```text
+On premises -> inbound endpoint -> VPC Resolver -> private hosted zone
+VPC Resolver -> outbound rule/endpoint -> on-premises DNS
+```
+
+Do not create Resolver endpoints for screenshots; each endpoint uses multiple
+ENIs/IPs and can incur ongoing charges.
+
+### Interface endpoint and PrivateLink forms
+
+Open **VPC → Endpoints → Create endpoint** and compare:
+
+- Gateway endpoint: S3/DynamoDB route-table target; no endpoint ENI.
+- Interface endpoint: private ENIs, subnet/AZ selection, Security Groups,
+  private DNS, hourly and data-processing considerations.
+- Endpoint service/PrivateLink: privately publish a provider service behind a
+  supported load balancer to consumer interface endpoints.
+
+Do not create an interface endpoint solely for evidence.
+
+## Service-Quota Evidence
+
+Record a sanitized yes/no readiness table for both Regions:
+
+| Dependency | Mumbai sufficient? | N. Virginia sufficient? | Remediation/lead time |
+|---|---|---|---|
+| EC2 On-Demand vCPUs |  |  |  |
+| VPCs/subnets/routes/SGs |  |  |  |
+| Public IPv4/EIP need |  |  |  |
+| AWS Backup vault/copy capacity |  |  |  |
+| KMS key and permissions |  |  |  |
+| TGW/VPN/DX quotas if selected |  |  |  |
+| Resolver endpoints/rules if selected |  |  |  |
+
+Do not publish quota values that reveal sensitive account capacity. The
+evidence should show that the dependency was checked and whether action is
+required.
+
 ## Troubleshooting Order
 
 ### Source webpage does not open
