@@ -19,6 +19,13 @@
 14. Start WAF rules in Count mode before enforcing Block.
 15. Shield Standard is included; Shield Advanced is paid.
 16. CloudFront caches HTTP content; Global Accelerator does not cache.
+17. The registrar and authoritative DNS provider can be different; edit records
+    where `dig NS` points.
+18. ACM validation CNAME, CloudFront application CNAME, and Route 53 subdomain
+    delegation are three separate DNS operations.
+19. GoDaddy, Namecheap, and Cloudflare can delegate `lab` with subdomain NS
+    records; Hostinger's DNS editor currently requires the full-domain Route 53
+    nameserver method for this exact routing-policy lab.
 
 ## Day 16 Recall
 
@@ -68,6 +75,8 @@
 - ACM in the workload Region is invisible for CloudFront viewer use unless that
   Region is `us-east-1`.
 - Deleting ACM's DNS validation record can prevent managed renewal.
+- Changing root nameservers without recreating MX/TXT and other records can
+  break email and domain services.
 - Route 53 changes answers; it does not replicate data or warm a DR Region.
 - A healthy network endpoint does not prove the application is correct.
 - Direct Connect alone does not guarantee encryption or resilience.

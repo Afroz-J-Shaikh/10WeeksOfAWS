@@ -22,6 +22,8 @@ week-08/submissions/<github-username>/
 - Name:
 - GitHub:
 - LinkedIn:
+- Learner resource prefix:
+- Domain/DNS provider used:
 - Primary Region:
 - DR Region:
 
@@ -31,9 +33,11 @@ week-08/submissions/<github-username>/
 - Cache hit and invalidation result:
 - Signed URL authorization result:
 - ACM request Region and DNS-validation result:
+- ACM validation record versus application record:
+- Route 53 delegation method or approved exception:
 - Custom HTTPS hostname result:
 - Weighted routing observation:
-- 90/10 versus 50/50 comparison:
+- 80/20 versus 50/50 comparison:
 - Failover and failback observation:
 - WAF Count/Block result:
 - Shield and Global Accelerator decision:
@@ -74,6 +78,9 @@ Write 300-500 words.
 
 - [ ] Learner-created ACM request in `us-east-1`
 - [ ] ACM DNS-validation `CNAME` and `Issued` status
+- [ ] Learner-owned domain naming map and authoritative-provider proof
+- [ ] Four Route 53 `NS` values delegated correctly, or documented Hostinger
+      full-domain Route 53 method/approved exception
 - [ ] Separate custom-domain DNS record and valid HTTPS result
 - [ ] S3 Block Public Access enabled and direct object denial
 - [ ] Distribution-scoped OAC bucket policy and CloudFront success
@@ -83,7 +90,7 @@ Write 300-500 words.
 - [ ] Unsigned `403`, signed `200`, and expiry explanation
 - [ ] Healthy Mumbai and N. Virginia checks
 - [ ] Weighted authoritative-DNS query result
-- [ ] `90/10` and `50/50` weighted-routing observations
+- [ ] `80/20` and `50/50` weighted-routing observations
 - [ ] Primary answer, secondary failover, and primary failback
 - [ ] WAF Count and temporary Block evidence with access restored
 - [ ] Shield/Global Accelerator decision without paid-resource creation

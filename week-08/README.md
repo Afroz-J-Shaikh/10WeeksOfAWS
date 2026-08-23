@@ -32,6 +32,26 @@ Architecture references:
 - [Route 53 multi-Region active-passive failover](./%23%20Route%2053%20Multi-Region%20Active-Passive%20Failover.png)
 - [Day 15 sample origin page](./index.html)
 
+## Learner Naming
+
+Every learner uses their own name/GitHub username and domain. For example, a
+learner named Anita can choose:
+
+```text
+Resource prefix: anita-w8
+Purchased domain: anitaawslab.com
+CloudFront name: cdn.anitaawslab.com
+Route 53 lab zone: lab.anitaawslab.com
+Weighted name: weighted.lab.anitaawslab.com
+Failover name: app.lab.anitaawslab.com
+```
+
+The domain example is illustrative and may be unavailable. Do not copy the
+instructor's domain, account ID, resource names, IPs, or certificate. Review
+both initial and renewal pricing before purchasing a domain; hosting is not
+required. The Day 15 lab contains exact GoDaddy, Hostinger, Namecheap,
+Cloudflare, and Route 53 DNS paths.
+
 ## Day 15 Required Outcomes
 
 - Select DNS record types and Route 53 routing policies from requirements.
@@ -44,6 +64,24 @@ Architecture references:
 - Create the application DNS record separately from the ACM validation record.
 - Test a WAF rule in Count mode, briefly validate Block, and restore access.
 - Explain signed cookies, Shield Standard/Advanced, and Global Accelerator.
+
+## Day 15 Architecture
+
+```text
+Viewer -> authoritative DNS -> CloudFront + ACM + WAF
+                                  |-- cache hit -> viewer
+                                  `-- cache miss + OAC -> private S3
+
+Parent DNS -- NS delegation --> Route 53 lab hosted zone
+                                  |-- weighted -> Mumbai / N. Virginia
+                                  `-- failover -> healthy primary or secondary
+```
+
+The ACM validation CNAME, CloudFront application CNAME, and Route 53 subdomain
+NS delegation are three separate DNS jobs. Hostinger DNS currently does not
+support custom NS records for a subdomain, so Hostinger learners must either
+move a disposable practice domain's full authoritative DNS to Route 53 or use
+an approved design-only exception.
 
 ## Day 16 Required Outcomes
 
@@ -58,6 +96,23 @@ Architecture references:
 - Copy the recovery point from Mumbai to N. Virginia.
 - Restore a new EC2 instance and validate the recovered application and data.
 - Explain optional Route 53 failover to the recovered workload.
+
+## Day 16 Architecture
+
+```text
+On premises -> VPN or Direct Connect -> Transit Gateway -> Mumbai workload
+                     |                       |
+               hybrid Resolver              v
+                                      source backup vault
+                                              |
+                                      cross-Region copy
+                                              v
+                                    N. Virginia DR vault
+                                              |
+                                         restore EC2
+                                              |
+                                    validate, route, fail back
+```
 
 ## Minimum Submission
 

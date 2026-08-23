@@ -27,6 +27,14 @@ Check both `ap-south-1` and `us-east-1`, plus global service consoles.
 13. Decide whether the ACM certificate will be retained. If deleting it, first
     confirm it is unused, delete it, and remove its validation `CNAME`. If
     retaining it, keep the validation record for managed renewal.
+14. If the entire practice domain was moved from Hostinger or another registrar
+    to Route 53 name servers, deliberately choose one final state:
+    - retain Route 53 authoritative DNS and the required hosted zone/records;
+    - restore the previous name servers only after recreating all required
+      records at the previous provider; or
+    - let a disposable domain expire only after disabling unintended renewal.
+    Never delete the active hosted zone before changing the registrar's name
+    servers, or the domain becomes unavailable.
 
 Do not delete a shared parent hosted zone, shared certificate, production DNS
 record, shared WAF ACL, default VPC, or default Security Group.
@@ -37,16 +45,16 @@ record, shared WAF ACL, default VPC, or default Security Group.
 2. Terminate the N. Virginia restored instance and Mumbai source instance.
 3. Confirm their lab-only EBS volumes and public IPv4 resources are gone.
 4. In N. Virginia, delete the copied recovery point from
-   `cloudadhar-day16-dr-vault`.
+   `<PREFIX>-day16-dr-vault`.
 5. Delete the empty destination vault.
 6. In Mumbai, delete the source recovery point from
-   `cloudadhar-day16-primary-vault`.
+   `<PREFIX>-day16-primary-vault`.
 7. Delete the empty source vault.
 8. Delete optional private hosted-zone records/associations and then the zone.
 9. Delete the optional S3 gateway endpoint and verify its route-table entry is
    removed.
 10. Delete Day 16 Security Groups after all ENIs are gone.
-11. Schedule deletion of `alias/cloudadhar-day16-dr-backup-key`'s KMS key only
+11. Schedule deletion of `alias/<PREFIX>-day16-dr-backup-key`'s KMS key only
     if it was created solely for this lab and no retained recovery point or
     other resource requires it. Remove the alias as appropriate.
 12. Delete lab-only AWS Backup IAM roles only after confirming no other backup
