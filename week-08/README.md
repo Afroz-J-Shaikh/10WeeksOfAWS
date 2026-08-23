@@ -35,15 +35,15 @@ Architecture references:
 ## Learner Naming
 
 Every learner uses their own name/GitHub username and domain. For example, a
-learner named Anita can choose:
+learner named Sanket can choose:
 
 ```text
-Resource prefix: anita-w8
-Purchased domain: anitaawslab.com
-CloudFront name: cdn.anitaawslab.com
-Route 53 lab zone: lab.anitaawslab.com
-Weighted name: weighted.lab.anitaawslab.com
-Failover name: app.lab.anitaawslab.com
+Resource prefix: sanket-w8
+Purchased domain: sanketawslab.com
+CloudFront name: cdn.sanketawslab.com
+Route 53 lab zone: lab.sanketawslab.com
+Weighted name: weighted.lab.sanketawslab.com
+Failover name: app.lab.sanketawslab.com
 ```
 
 The domain example is illustrative and may be unavailable. Do not copy the

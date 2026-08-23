@@ -17,8 +17,8 @@ certificate.
 
 | Placeholder | Your value |
 |---|---|
-| `<LEARNER>` | Short lowercase name, for example `anita` |
-| `<PREFIX>` | Unique prefix, for example `anita-w8` |
+| `<LEARNER>` | Short lowercase name, for example `sanket` |
+| `<PREFIX>` | Unique prefix, for example `sanket-w8` |
 | `<ACCOUNT-ID>` | Current AWS account ID |
 | `<ROOT-DOMAIN>` | Domain whose DNS you control |
 | `<CDN-NAME>` | For example `cdn.<ROOT-DOMAIN>` |
@@ -64,7 +64,8 @@ required for this challenge.
 ### Purchase checklist
 
 1. Search for a short practice name based on a first name, GitHub username, or
-   neutral alias, such as `anitaawslab`, `rahulcloudlab`, or `devname-w8`.
+   neutral alias, such as `sanketlab`, `sanketaws`, `aliyaaws`, or
+   `devname-w8`.
 2. Compare several available top-level domains at the registrar's live checkout.
 3. Record the first-year price, renewal price, tax, privacy terms, and minimum
    registration period before choosing.
@@ -84,20 +85,20 @@ Official domain search pages: [GoDaddy](https://www.godaddy.com/domains),
 
 ### Recommended learner example
 
-Suppose the learner is Anita and purchases `anitaawslab.com`:
+Suppose the learner is Sanket and purchases `sanketawslab.com`:
 
-| Purpose | Template | Anita's example |
+| Purpose | Template | Sanket's example |
 |---|---|---|
-| Learner name | `<LEARNER>` | `anita` |
-| Resource prefix | `<PREFIX>` | `anita-w8` |
-| Registered domain | `<ROOT-DOMAIN>` | `anitaawslab.com` |
-| CloudFront hostname | `<CDN-NAME>` | `cdn.anitaawslab.com` |
-| Delegated Route 53 zone | `<LAB-ZONE>` | `lab.anitaawslab.com` |
-| Primary endpoint | `primary.<LAB-ZONE>` | `primary.lab.anitaawslab.com` |
-| Secondary endpoint | `secondary.<LAB-ZONE>` | `secondary.lab.anitaawslab.com` |
-| Weighted endpoint | `weighted.<LAB-ZONE>` | `weighted.lab.anitaawslab.com` |
-| Failover endpoint | `app.<LAB-ZONE>` | `app.lab.anitaawslab.com` |
-| S3 bucket | `<PREFIX>-edge-<ACCOUNT-ID>-ap-south-1` | `anita-w8-edge-123456789012-ap-south-1` |
+| Learner name | `<LEARNER>` | `sanket` |
+| Resource prefix | `<PREFIX>` | `sanket-w8` |
+| Registered domain | `<ROOT-DOMAIN>` | `sanketawslab.com` |
+| CloudFront hostname | `<CDN-NAME>` | `cdn.sanketawslab.com` |
+| Delegated Route 53 zone | `<LAB-ZONE>` | `lab.sanketawslab.com` |
+| Primary endpoint | `primary.<LAB-ZONE>` | `primary.lab.sanketawslab.com` |
+| Secondary endpoint | `secondary.<LAB-ZONE>` | `secondary.lab.sanketawslab.com` |
+| Weighted endpoint | `weighted.<LAB-ZONE>` | `weighted.lab.sanketawslab.com` |
+| Failover endpoint | `app.<LAB-ZONE>` | `app.lab.sanketawslab.com` |
+| S3 bucket | `<PREFIX>-edge-<ACCOUNT-ID>-ap-south-1` | `sanket-w8-edge-123456789012-ap-south-1` |
 
 The example domain is illustrative and may not be available. Avoid your full
 legal name if you do not want it public. Domain names, DNS records, certificate
@@ -155,7 +156,7 @@ authoritative name servers.
    root domain. Example:
 
 ```text
-ACM displays: _abc123.cdn.anitaawslab.com.
+ACM displays: _abc123.cdn.sanketawslab.com.
 GoDaddy Name: _abc123.cdn
 ```
 

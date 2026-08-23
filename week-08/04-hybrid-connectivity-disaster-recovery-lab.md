@@ -19,8 +19,8 @@ Choose the same learner prefix used on Day 15:
 
 | Placeholder | Example | Rule |
 |---|---|---|
-| `<LEARNER>` | `anita` | Short lowercase name or GitHub username |
-| `<PREFIX>` | `anita-w8` | Unique learner prefix; never use instructor names |
+| `<LEARNER>` | `sanket` | Short lowercase name or GitHub username |
+| `<PREFIX>` | `sanket-w8` | Unique learner prefix; never use instructor names |
 | `<SOURCE-PUBLIC-IP>` | Runtime value | Keep private and mask in evidence |
 | `<RESTORED-PUBLIC-IP>` | Runtime value | Keep private and mask in evidence |
 
