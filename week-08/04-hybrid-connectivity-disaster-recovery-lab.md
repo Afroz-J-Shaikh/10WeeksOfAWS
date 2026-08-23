@@ -90,17 +90,74 @@ User data:
 
 ```bash
 #!/bin/bash
+set -euxo pipefail
+
+LEARNER_NAME="Sanket" # Aliya can use "Aliya"; replace with your own name.
 dnf install -y nginx
-cat <<'HTML' > /usr/share/nginx/html/index.html
+
+cat > /usr/local/bin/render-day16-page.sh <<SCRIPT
+#!/bin/bash
+set -eu
+TOKEN=\$(curl -fsS -X PUT \
+  -H 'X-aws-ec2-metadata-token-ttl-seconds: 21600' \
+  http://169.254.169.254/latest/api/token)
+INSTANCE_ID=\$(curl -fsS \
+  -H "X-aws-ec2-metadata-token: \${TOKEN}" \
+  http://169.254.169.254/latest/meta-data/instance-id)
+REGION=\$(curl -fsS \
+  -H "X-aws-ec2-metadata-token: \${TOKEN}" \
+  http://169.254.169.254/latest/meta-data/placement/region)
+
+case "\${REGION}" in
+  ap-south-1) LOCATION="Mumbai"; STATUS="Production" ;;
+  us-east-1) LOCATION="N. Virginia"; STATUS="DR Recovery Successful" ;;
+  *) LOCATION="Recovered workload"; STATUS="Validate this Region" ;;
+esac
+
+cat > /usr/share/nginx/html/index.html <<HTML
 <!doctype html><html><body style="font-family:Arial;text-align:center;padding:80px">
-<h1>&lt;YOUR-NAME&gt; - Production</h1>
-<h2>Mumbai - ap-south-1</h2>
-<p>Protected using AWS Backup</p>
+<h1>${LEARNER_NAME} - \${STATUS}</h1>
+<h2>\${LOCATION} - \${REGION}</h2>
+<p>Instance ID: \${INSTANCE_ID}</p>
+<p>Protected and restored using AWS Backup</p>
 <p id="marker">Synthetic recovery marker: DAY16</p>
 </body></html>
 HTML
-systemctl enable --now nginx
+printf 'healthy\n' > /usr/share/nginx/html/health
+SCRIPT
+chmod 755 /usr/local/bin/render-day16-page.sh
+
+cat > /etc/systemd/system/render-day16-page.service <<'UNIT'
+[Unit]
+Description=Render Day 16 page from IMDSv2 metadata
+Wants=network-online.target
+After=network-online.target
+Before=nginx.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/render-day16-page.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+UNIT
+
+systemctl daemon-reload
+systemctl enable render-day16-page.service nginx.service
+systemctl start render-day16-page.service
+systemctl start nginx.service
 ```
+
+Replace `Sanket` with your own name. For example, Sanket might use a domain such
+as `sanketlab.example` later, while Aliya uses her own purchased domain. Do not
+copy another learner's real domain or place secrets in user data.
+
+The render script uses IMDSv2 to discover the instance's current Region and ID.
+Its systemd unit is stored on the protected EBS volume and runs at every boot.
+AWS Backup does not restore EC2 launch user data as launch configuration; after
+the DR instance boots, the restored unit re-renders the page using the new
+instance's metadata.
 
 Wait for both EC2 status checks. Validate `http://<SOURCE-PUBLIC-IP>/` and from
 inside the instance:
@@ -109,8 +166,13 @@ inside the instance:
 sudo systemctl status nginx --no-pager
 sudo ss -ltnp | grep ':80'
 curl -I http://localhost
+curl http://localhost/health
 curl http://localhost | grep 'Synthetic recovery marker: DAY16'
+curl http://localhost | grep -E 'Mumbai|ap-south-1|Instance ID'
 ```
+
+Expect HTTP `200`, the exact response `healthy`, Mumbai/`ap-south-1`, and the
+source instance ID shown on the page.
 
 Record privately the instance, VPC, subnet, private IP, public IP, AMI,
 architecture, IAM profile, and SG. Open the root volume details and confirm
@@ -164,13 +226,22 @@ required by AWS Backup and the restore role.
 
 Return to Mumbai.
 
-1. Open **AWS Backup → Settings → Service opt-in** and ensure EC2 resource
+1. Open **IAM → Roles → `AWSBackupDefaultServiceRole`**. Confirm it has
+   `AWSBackupServiceRolePolicyForBackup` and
+   `AWSBackupServiceRolePolicyForRestores`, or use an approved least-privilege
+   equivalent. If the default role does not exist yet, select **Default role**
+   in the on-demand backup form; AWS Backup can create it after you grant the
+   requested IAM permission. Then return to IAM and verify both policies before
+   relying on the role. Do not attach `AdministratorAccess` to make the lab
+   work. The destination KMS key policy must also permit the approved backup and
+   restore path.
+2. Open **AWS Backup → Settings → Service opt-in** and ensure EC2 resource
    protection is enabled for the account/Region.
-2. Open **Backup vaults → Add backup vault**.
-3. Create `<PREFIX>-day16-primary-vault` with the default or approved encryption
+3. Open **Backup vaults → Add backup vault**.
+4. Create `<PREFIX>-day16-primary-vault` with the default or approved encryption
    key. Do not enable Vault Lock.
-4. Choose **Protected resources → Create on-demand backup**.
-5. Configure:
+5. Choose **Protected resources → Create on-demand backup**.
+6. Configure:
 
 ```text
 Resource type:       EC2
@@ -181,10 +252,10 @@ IAM role:            Default AWS Backup role or approved existing role
 Lifecycle/retention: short deliberate lab value allowed by policy
 ```
 
-6. Choose **Create on-demand backup** once; do not repeatedly click while the
+7. Choose **Create on-demand backup** once; do not repeatedly click while the
    job is starting.
-7. Open **Jobs → Backup jobs**, select the job, and monitor until **Completed**.
-8. Open the source vault and confirm the EC2 recovery point is visible.
+8. Open **Jobs → Backup jobs**, select the job, and monitor until **Completed**.
+9. Open the source vault and confirm the EC2 recovery point is visible.
 
 Record the backup job ID, completion time, recovery-point ARN suffix, resource
 ID, vault, and expiry. A running or completed-with-issues job is not acceptable
@@ -222,11 +293,13 @@ through Session Manager/Instance Connect:
 
 ```bash
 sudo systemctl stop nginx
-curl --max-time 5 http://localhost || true
+curl --max-time 5 http://localhost/health || true
 ```
 
 Confirm the public HTTP request fails. This preserves the instance for safe
 comparison and avoids making a destructive assumption before recovery succeeds.
+Record the incident, detection, and recovery-declaration times in UTC. Do not
+start the restore until the declaration timestamp has been recorded.
 
 ## Part G - Restore in N. Virginia
 
@@ -245,8 +318,10 @@ AWS Backup restores the same EC2 key-pair association used by the protected
 instance; the restore workflow does not let you select a different key pair.
 Ensure that key still exists if it is required, or use an approved Systems
 Manager path. AWS Backup also does not back up and restore launch user data.
-The Nginx page in this challenge is recovered because the installed files are
-on the backed-up EBS volume, not because the original user-data script reruns.
+The Nginx files, render script, and enabled systemd unit are recovered because
+they are on the backed-up EBS volume. The original user-data script does not
+rerun; the restored unit runs during the new instance's boot and obtains fresh
+Region and instance-ID values through IMDSv2.
 
 Start the restore and monitor **Restore jobs** until **Completed**. Restore
 creates a new EC2 instance and volumes; it does not move or overwrite the
@@ -272,19 +347,44 @@ success with application readiness.
 
 ## Part H - Validate the Recovered Workload
 
-Confirm:
+Using the timestamps recorded before recovery, confirm:
 
 1. EC2 instance and system status checks pass.
 2. The restored EBS volume is encrypted.
-3. Nginx is running; start it if the simulated stopped-service state was
-   captured in the backup or if boot behavior requires it.
-4. `http://<RESTORED-PUBLIC-IP>/` displays the Mumbai page and the exact
-   synthetic recovery marker.
-5. Source and restored instance IDs differ.
-6. Region, VPC, subnet, SG, public/private IP, IAM, and monitoring settings are
+3. `render-day16-page.service` completed and Nginx is running.
+4. The restored endpoint returns HTTP `200` and `/health` returns `healthy`.
+5. The page displays **DR Recovery Successful**, N. Virginia, `us-east-1`, the
+   new instance ID, and the exact synthetic recovery marker.
+6. IMDSv2 independently reports `us-east-1` and the same restored instance ID.
+7. Source and restored instance IDs differ.
+8. Region, VPC, subnet, SG, public/private IP, IAM, and monitoring settings are
    reviewed for the DR environment.
-7. The measured restore elapsed time is compared with the stated RTO.
-8. The recovery-point completion time is compared with failure time and RPO.
+9. Backup, copy, restore, application, and metadata proof are captured.
+
+Run on the restored instance:
+
+```bash
+curl -I http://localhost
+curl http://localhost/health
+curl http://localhost | grep -E 'DR Recovery Successful|N. Virginia|us-east-1|Instance ID|DAY16'
+TOKEN=$(curl -fsS -X PUT -H 'X-aws-ec2-metadata-token-ttl-seconds: 21600' \
+  http://169.254.169.254/latest/api/token)
+curl -fsS -H "X-aws-ec2-metadata-token: ${TOKEN}" \
+  http://169.254.169.254/latest/meta-data/placement/region
+curl -fsS -H "X-aws-ec2-metadata-token: ${TOKEN}" \
+  http://169.254.169.254/latest/meta-data/instance-id
+```
+
+Calculate achieved objectives from recorded UTC timestamps:
+
+```text
+Achieved RTO = detection + declaration + orchestration + restore
+               + configuration + validation + DNS cutover (if used)
+Achieved RPO = incident time - latest usable copied recovery-point time
+```
+
+Detection is not recovery, a completed restore is not application validation,
+and validation is not traffic cutover. Record each milestone separately.
 
 Only after successful validation may you terminate the disposable source during
 cleanup.
@@ -322,13 +422,25 @@ For S3 private routing:
 
 ## Optional Part J - Route 53 DR Failover
 
-If you control a public hosted zone, create health checks and primary/secondary
-failover records for the source and restored endpoints. With the source Nginx
-stopped, query a Route 53 authoritative name server and confirm the secondary
-answer. Restart source Nginx, wait for its health check to become Healthy, and
-prove failback. Explain why DNS failover does not perform the backup, restore,
-or application validation. Remove any temporary health-check ingress rules
-immediately afterward.
+If you control a public hosted zone, use a learner-owned name such as
+`dr.<LAB-ZONE>` and create a health check whose path is `/health`. For a
+backup-and-restore design, follow this order:
+
+1. Detect the failure and declare the recovery event.
+2. Restore and configure the N. Virginia instance.
+3. Validate HTTP, `/health`, page metadata, and the new instance ID.
+4. Create or update the secondary failover record with the validated endpoint.
+5. Query a Route 53 authoritative name server and perform the planned DNS
+   cutover/failover test.
+6. Restart the source only for an intentional failback test and wait for health
+   status and DNS caches to converge.
+
+A backup-and-restore secondary endpoint does not exist until recovery is
+performed. A continuously available secondary is warm standby or another DR
+strategy. For a production design, prefer Regional load balancers with Route 53
+alias records; public EC2 IP records are only a classroom simplification.
+Explain why DNS failover does not perform backup, restore, configuration, or
+application validation. Remove temporary health-check ingress immediately.
 
 Use the Day 15 domain/provider instructions. Do not create records under an
 instructor's domain. The restored endpoint must pass application validation
@@ -407,16 +519,22 @@ Open **VPC → Transit Gateways**, **Transit Gateway attachments**, and **Transi
 Gateway route tables**. Without creating resources, map:
 
 1. a Mumbai VPC attachment;
-2. a DR VPC attachment;
+2. a DR VPC attachment to a separate `us-east-1` TGW;
 3. a VPN or Direct Connect gateway path;
 4. the one TGW route-table association used for ingress lookup by each
    attachment;
 5. the route tables into which each attachment propagates routes;
 6. any deliberate static or blackhole route; and
-7. the matching subnet/VPC route-table entries required on both sides.
+7. an inter-Region TGW peering attachment and its required static TGW routes;
+   and
+8. the matching subnet/VPC route-table entries required on both sides.
 
 Association, propagation, VPC routes, and on-premises routes are different
-configuration layers. A TGW attachment alone does not create end-to-end reachability.
+configuration layers. Transit Gateway is Regional. Inter-Region peering provides
+network reachability only, uses static routes, and does not copy application
+data, EBS volumes, backups, or DNS records. AWS Backup cross-Region copy does not
+require TGW peering. A TGW attachment alone does not create end-to-end
+reachability.
 
 ### Route 53 Resolver forms
 
@@ -454,9 +572,11 @@ Record a sanitized yes/no readiness table for both Regions:
 | Dependency | Mumbai sufficient? | N. Virginia sufficient? | Remediation/lead time |
 |---|---|---|---|
 | EC2 On-Demand vCPUs |  |  |  |
+| EBS capacity, IOPS, and throughput |  |  |  |
 | VPCs/subnets/routes/SGs |  |  |  |
+| ENIs and subnet IP availability |  |  |  |
 | Public IPv4/EIP need |  |  |  |
-| AWS Backup vault/copy capacity |  |  |  |
+| AWS Backup copy/restore concurrency |  |  |  |
 | KMS key and permissions |  |  |  |
 | TGW/VPN/DX quotas if selected |  |  |  |
 | Resolver endpoints/rules if selected |  |  |  |
@@ -513,17 +633,22 @@ Never delete a key needed by a retained recovery point.
 - [Route 53 private hosted zones](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/hosted-zones-private.html)
 - [VPC gateway endpoints](https://docs.aws.amazon.com/vpc/latest/privatelink/gateway-endpoints.html)
 - [Disaster recovery strategies](https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html)
+- [Centralized deployment model for Transit Gateway](https://docs.aws.amazon.com/prescriptive-guidance/latest/integrating-third-party-firewall-appliances/centralized-deployment-model.html)
+- [Hybrid DNS with Route 53 Resolver](https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/set-up-dns-resolution-for-hybrid-networks-in-a-multi-account-aws-environment.html)
+- [Automate inter-Region Transit Gateway peering](https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/automate-aws-transit-gateway-peering-attachments-in-a-multi-region-organization.html)
+- [AWS Backup restore testing](https://docs.aws.amazon.com/aws-backup/latest/devguide/restore-testing.html)
 
 ## Validation Checklist
 
-- [ ] Source instance, page, marker, and EBS encryption are proven
+- [ ] Source page, `/health`, IMDSv2 metadata, marker, and encryption are proven
 - [ ] Target-Region network, quota, KMS, and SG dependencies are checked
 - [ ] Source recovery point is Completed
 - [ ] Cross-Region copy job is Completed
 - [ ] Destination vault contains the encrypted copied recovery point
 - [ ] Restore job is Completed and creates a different EC2 instance
-- [ ] Restored page contains the expected synthetic marker
-- [ ] Actual RTO and RPO observations are recorded
+- [ ] Restored page shows `us-east-1`, its new instance ID, and the marker
+- [ ] Restored `/health` returns `healthy`
+- [ ] Achieved RTO and RPO are calculated from recorded UTC milestones
 - [ ] Hybrid and DR strategy decisions are completed
 - [ ] Cleanup is completed in Mumbai and N. Virginia
 
