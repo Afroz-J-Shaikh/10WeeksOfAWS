@@ -228,8 +228,6 @@ Dependencies required after restore: correct KMS access, subnet routing, Securit
 
 ### Part E - Copy the Recovery Point Cross-Region
 
-   ![snapshot](./evidence/day16-hybrid-and-dr/copy-job.png)
-
    - Job ID - `82e37311-4cee-4e84-b498-49f232efd524` 
    - Source Region - `Asia Pacific (Mumbai)`
    - destination Region - `United States (N. Virginia)`
@@ -262,7 +260,7 @@ Dependencies required after restore: correct KMS access, subnet routing, Securit
 
    - EC2 instance and system status checks pass
 
-      ![snapshot](./evidence/day16-hybrid-and-dr/restore-ec2.png)
+      ![snapshot](./evidence/day16-hybrid-and-dr/restored-ec2.png)
 
       ![snapshot](./evidence/day16-hybrid-and-dr/pass.png)
 
@@ -350,6 +348,7 @@ Write 300-500 words.
    ![snapshot](./evidence/cleanup/kms.png) 
 
 - Regions and global consoles checked:
+   - **YES**
 
 ## Reflection
 1. Why are the ACM validation record and CloudFront application record different?
