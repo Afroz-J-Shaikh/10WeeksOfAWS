@@ -99,7 +99,7 @@
 
    - Endpoint Records
 
-      ![snapshot](./evidence/day15-edge-and-dns/primary-seconary.png)
+      ![snapshot](./evidence/day15-edge-and-dns/primary-secondary.png)
 
    - Route53 health checks
 
