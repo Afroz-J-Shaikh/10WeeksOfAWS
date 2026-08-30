@@ -339,6 +339,9 @@ Complete these without creating the services:
 
    - **DNS and routing:** A Route 53 public hosted zone (`lab.afrozdevops.online`) is delegated from the GoDaddy-registered domain via four NS records. Within it, an `app.lab.afrozdevops.online` A record uses Failover routing: primary points to Mumbai, secondary to N. Virginia. If the primary's health check goes unhealthy, Route 53 automatically starts answering with the secondary IP — proven by stopping Nginx on the primary and watching DNS answers flip, then flip back on recovery.
 
+### Day 15 Architecture
+
+   ![snapshot](./week8-day16.gif)
 
    - This architecture demonstrates a resilient DR strategy for EC2 workloads spanning two AWS regions — ap-south-1 (Mumbai) as the primary region and us-east-1 (N. Virginia) as the DR region — built entirely on AWS Backup.
 
