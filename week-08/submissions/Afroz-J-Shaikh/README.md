@@ -305,8 +305,50 @@ Achieved RPO = incident time - latest usable copied recovery-point time
              = 7 minutes 41 seconds
 ```
 
+### Required Decision Notes
+
+Complete these without creating the services:
+
+| Scenario | Your choice | Reason |
+|---|---|
+| Rapid encrypted hybrid connection | Site-to-Site VPN | Sets up in minutes over the internet with IPsec encryption |
+| Predictable high bandwidth | Direct Connect | Dedicated physical link gives consistent throughput/latency, not subject to internet variability |
+| Many VPC and VPN attachments | Transit Gateway | Acts as a central hub, avoiding a full mesh of peering connections |
+| On-prem resolves AWS private names | Resolver inbound endpoint | Lets on-prem DNS servers send queries into the VPC to resolve private hosted zone/Route 53 records |
+| VPC forwards a domain to on-prem DNS | Resolver outbound endpoint | Lets the VPC forward specific domain queries out to on-prem DNS servers |
+| Private S3 access | Gateway endpoint | S3 and DynamoDB use gateway endpoints (route table target), free of charge |
+| Private access to a supported AWS API | Interface endpoint | Uses an ENI with a private IP (PrivateLink) for most other AWS services (e.g., SSM, Secrets Manager) |
+| Lowest-cost relaxed DR | Backup and restore | Cheapest RTO/RPO tradeoff — just backups, restored on demand |
+| Core services always running | Pilot light | Minimal core infrastructure (e.g., DB) kept live; rest scaled up when needed |
+| Reduced complete environment | Warm standby | Scaled-down but fully functional copy of the environment, ready to scale up |
+| Both Regions serve traffic | Active-active | Both regions handle live traffic simultaneously, giving near-zero RTO/RPO |
+
 ## Architecture Explanation
-Write 300-500 words.
+
+### Day 15 Architecture
+
+   ![snapshot](./week8-day15.gif)
+
+   - This design delivers a globally distributed, secure content delivery pipeline built around a private S3 origin, CloudFront edge caching, and multi-region active-passive failover.
+
+   - **Origin and content protection:** The S3 bucket in Mumbai (ap-south-1) stores the origin content with Block Public Access enabled, default SSE-S3 encryption, versioning, and bucket-owner-enforced ownership. It's never exposed directly — CloudFront reaches it exclusively through an Origin Access Control (OAC), so any direct S3 request is denied while CloudFront-authenticated requests succeed.
+
+   - **Edge delivery and security:** CloudFront sits in front of the origin as the single global entry point. The default cache behavior (/*) serves index.html publicly, while a separate private/* behavior requires signed URLs or signed cookies validated against a trusted key group — restricting sensitive paths to authorized requesters only. In front of CloudFront, a WAF Web ACL inspects Layer-7 traffic with rules that can Count or Block based on IP sets. TLS is handled by an ACM certificate (issued in us-east-1, as CloudFront requires), validated via a DNS CNAME record.
+
+   - **Compute and failover:** Two EC2 instances run in separate regions — a primary in Mumbai and a secondary/standby in N. Virginia (us-east-1) — each behind its own Elastic IP in a public subnet. Route 53 health checks continuously poll both instances' HTTP endpoints.
+
+   - **DNS and routing:** A Route 53 public hosted zone (`lab.afrozdevops.online`) is delegated from the GoDaddy-registered domain via four NS records. Within it, an `app.lab.afrozdevops.online` A record uses Failover routing: primary points to Mumbai, secondary to N. Virginia. If the primary's health check goes unhealthy, Route 53 automatically starts answering with the secondary IP — proven by stopping Nginx on the primary and watching DNS answers flip, then flip back on recovery.
+
+
+   - This architecture demonstrates a resilient DR strategy for EC2 workloads spanning two AWS regions — ap-south-1 (Mumbai) as the primary region and us-east-1 (N. Virginia) as the DR region — built entirely on AWS Backup.
+
+   - **Primary Region (Mumbai):** A Primary EC2 instance runs inside a public subnet within a VPC. AWS Backup triggers an On-Demand Backup of this instance, which is encrypted using a Default KMS Key. The backup is stored as an EC2 Recovery Point inside the Primary Vault — a secure, immutable storage container for backup data. This recovery point acts as the source of truth for cross-region protection.
+
+   - **Cross-Region Copy:** A Copy Job takes the recovery point from the Primary Vault and replicates it across the AWS backbone into the DR region. This copy operation ensures that a consistent, point-in-time snapshot of the EC2 instance exists outside the primary region, protecting against regional outages, disasters, or data corruption events.
+
+   - **DR Region (N. Virginia):** The copied backup lands in the DR Vault, this time encrypted with a Customer Managed KMS Key — giving the DR region independent control over encryption keys and access policies. This produces a second EC2 Recovery Point, now residing entirely within us-east-1.
+
+   - **Restore Flow:** When disaster recovery is invoked, a Restore Job reads the EC2 Recovery Point from the DR Vault and provisions a new EC2 instance — the DR Restored instance — inside a separate VPC's public subnet in the DR region. This restored instance can immediately take over production traffic if Mumbai becomes unavailable.
 
 ## Cleanup
 - Day 15 EC2, DNS, health checks, CloudFront, WAF, S3 and signing keys:
