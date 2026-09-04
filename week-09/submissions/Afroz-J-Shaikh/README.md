@@ -4,7 +4,7 @@
 - Name: Afroz Shaikh
 - GitHub: https://github.com/Afroz-J-Shaikh
 - LinkedIn: https://www.linkedin.com/in/afroz-j-shaikh/
-- Region: ap-south-1 (Mumbai)
+- Region: ap-south-1 (Mumbai) & us-east-1 (N. Virginia)
 
 ## Day 17 - Amazon SQS
 
@@ -41,13 +41,13 @@
 
    - DLQ recieves 1 message
 
-   ![snapshot](./evidence/sqs-standard-visibility-dlq/dlg-msg1.png)
+   ![snapshot](./evidence/sqs-standard-visibility-dlq/dlq-msg1.png)
 
    ![snapshot](./evidence/sqs-standard-visibility-dlq/dlq-1st-poll.png)
 
    - Standard queue has `0 messages`
 
-   ![snapshot](./evidence/sqs-standard-visibility-dlq/sts-0-msg.png)
+   ![snapshot](./evidence/sqs-standard-visibility-dlq/std-0-msg.png)
 
 - DLQ redrive result (message returned to source):
 
@@ -123,7 +123,7 @@
 ### Message Filtering
 - Filter policy added to priority queue subscription:
 
-   ![snapshot](./evidence/sns-fanout-filtering/poilcy.png)
+   ![snapshot](./evidence/sns-fanout-filtering/policy.png)
 
 - Test 1 result (NORMAL order: standard queue 1, priority queue 0):
 
@@ -351,12 +351,12 @@ Write 250-400 words covering:
 
 2. What is the difference between SQS Standard queue and SQS FIFO queue?
 
-| **Standard Queue** | **FIFO Queue** |
-|---|---|
-| Best-effort FIFO ordering (not guaranteed) | Strict FIFO ordering (messages processed in order) |
-| At-least-once delivery (duplicates possible) | Exactly-once processing (with deduplication)|
-| Nearly unlimited throughput (1000s per second) | Lower throughput (300 per second without batching, 3000 with batching) |
-| Use for: Most applications where order doesn't matter | Use for: Order-critical workflows (payment processing, inventory updates) |
+   | **Standard Queue** | **FIFO Queue** |
+   |---|---|
+   | Best-effort FIFO ordering (not guaranteed) | Strict FIFO ordering (messages processed in order) |
+   | At-least-once delivery (duplicates possible) | Exactly-once processing (with deduplication)|
+   | Nearly unlimited throughput (1000s per second) | Lower throughput (300 per second without batching, 3000 with batching) |
+   | Use for: Most applications where order doesn't matter | Use for: Order-critical workflows (payment processing, inventory updates) |
 
 3. When would you use SNS filter policy versus EventBridge pattern matching?
 
