@@ -20,17 +20,16 @@ Functions, DynamoDB, an EC2-hosted UI, and IAM roles.
 | 01 | Day 18 | Serverless and CloudFormation foundations | [01-serverless-and-cloudformation-foundations.md](./01-serverless-and-cloudformation-foundations.md) |
 | 02 | Day 18 | Live class practical placeholder | [02-serverless-and-cloudformation-practical.md](./02-serverless-and-cloudformation-practical.md) |
 | 03 | Week 10 | Design an end-to-end serverless order application | [03-architecture-exercise.md](./03-architecture-exercise.md) |
-| 04 | End | Remove Day 18 resources safely | [04-cleanup.md](./04-cleanup.md) |
-| 05 | End | Submit Week 10 evidence | [05-submission-format.md](./05-submission-format.md) |
-| 06 | Daily | Share learning progress | [06-linkedin-post.md](./06-linkedin-post.md) |
-| 07 | Review | Revise serverless and CloudFormation decisions | [07-quick-revision.md](./07-quick-revision.md) |
-| 08 | Day 19 | Security, governance, and observability foundations | [08-security-governance-and-observability.md](./08-security-governance-and-observability.md) |
-| 09 | Day 19 | CloudFormation security and observability practical | [09-security-governance-and-observability-practical.md](./09-security-governance-and-observability-practical.md) |
+| 04 | Day 19 | Security, governance, and observability foundations | [04-security-governance-and-observability.md](./04-security-governance-and-observability.md) |
+| 05 | Day 19 | CloudFormation security and observability practical | [05-security-governance-and-observability-practical.md](./05-security-governance-and-observability-practical.md) |
+| 06 | End | Remove Day 18 and Day 19 resources safely | [06-cleanup.md](./06-cleanup.md) |
+| 07 | End | Submit Week 10 evidence | [07-submission-format.md](./07-submission-format.md) |
+| 08 | Daily | Share learning progress | [08-linkedin-post.md](./08-linkedin-post.md) |
+| 09 | Review | Revise Week 10 decisions and practice scenarios | [09-quick-revision.md](./09-quick-revision.md) |
 
 Day 18 downloads:
 
-- [Student guide (PDF)](./AWS_Zero_To_Hero_Day18_Serverless_and_CloudFormation_Student_Guide.pdf)
-- [End-to-end order application CloudFormation template](./AWS_Zero_To_Hero_Day18_End_To_End_Order_Application_CloudFormation.yaml)
+- [End-to-end order application CloudFormation template](./cloudadhar-day18-CloudFormation.yaml)
 
 ## Day 18 Required Outcomes
 
