@@ -24,14 +24,8 @@ Functions, DynamoDB, an EC2-hosted UI, and IAM roles.
 | 05 | End | Submit Week 10 evidence | [05-submission-format.md](./05-submission-format.md) |
 | 06 | Daily | Share learning progress | [06-linkedin-post.md](./06-linkedin-post.md) |
 | 07 | Review | Revise serverless and CloudFormation decisions | [07-quick-revision.md](./07-quick-revision.md) |
-
-## Day 19 - Sunday Live Class
-
-| Resource | Purpose |
-|---|---|
-| [Day 19 live class README](./AWS_Zero_To_Hero_Day19_Security_Governance_Observability_Live_Class_README.md) | Security, governance, observability, Cognito, Gmail federation, metric, and S3 activity practice |
-| [Day 19 CloudFormation stack](./cloudadhar-day19-security-observability-stack.yaml) | Full learner demonstration with CloudWatch, CloudTrail, EventBridge, S3, EC2, and alerts |
-| [Day 19 CloudFormation test path](./cloudadhar-day19-security-observability-stack.yaml) | Test the custom metric alarm and S3/EventBridge activity from the deployed stack |
+| 08 | Day 19 | Security, governance, and observability foundations | [08-security-governance-and-observability.md](./08-security-governance-and-observability.md) |
+| 09 | Day 19 | CloudFormation security and observability practical | [09-security-governance-and-observability-practical.md](./09-security-governance-and-observability-practical.md) |
 
 Day 18 downloads:
 
