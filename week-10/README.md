@@ -29,8 +29,7 @@ Functions, DynamoDB, an EC2-hosted UI, and IAM roles.
 
 Day 18 downloads:
 
-- [Student guide (PDF)](./AWS_Zero_To_Hero_Day18_Serverless_and_CloudFormation_Student_Guide.pdf)
-- [End-to-end order application CloudFormation template](./AWS_Zero_To_Hero_Day18_End_To_End_Order_Application_CloudFormation.yaml)
+- [End-to-end order application CloudFormation template](./cloudadhar-day18-CloudFormation.yaml)
 
 ## Day 18 Required Outcomes
 
