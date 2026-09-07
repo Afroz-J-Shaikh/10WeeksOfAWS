@@ -25,6 +25,43 @@ Use `SlackIntegrationMode = UseExisting` after the manual Amazon Q Developer in 
 
 The data and CloudTrail audit buckets use `DeletionPolicy: Retain`; deleting the stack does not delete those buckets or their contents. Review and remove retained resources after the class.
 
+## Slack integration with Amazon Q Developer
+
+The AWS console may still display the CloudFormation resource type name `AWS::Chatbot::SlackChannelConfiguration`, but the product name is now **Amazon Q Developer in chat applications**.
+
+### Recommended path: reuse an existing SNS-to-Slack configuration
+
+Use this path when the instructor has already configured the classroom Slack channel:
+
+1. In Slack, create or open `#cloudadhar-aws-alerts`.
+2. Add **Amazon Q Developer in chat applications** to the workspace and invite it to the channel.
+3. In the AWS console, open **Amazon Q Developer in chat applications -> Configured clients -> Slack** and authorize the correct workspace. Workspace authorization is account-specific.
+4. Create an SNS Standard topic named `cloudadhar-day19-slack-alerts`, or use the topic already mapped to the channel.
+5. Configure the Slack channel to receive notifications from that SNS topic.
+6. Copy the SNS topic ARN and the Slack workspace ID. From the Slack channel's copied URL, use only the final `C...` segment as the channel ID.
+
+Deploy the CloudFormation stack with:
+
+```text
+SlackIntegrationMode: UseExisting
+ExistingAlertTopicArn: <existing SNS topic ARN>
+CreateGuardDutyNotificationRule: No
+```
+
+`SlackChannelId` is the channel ID such as `C0123456789`, not `#cloudadhar-aws-alerts` and not the complete Slack URL. In `UseExisting` mode, the workspace and channel parameters are not used by the stack.
+
+### CloudFormation-managed path
+
+Use this path only when the Slack channel is not already configured for this AWS account and workspace:
+
+1. Authorize the Slack workspace in Amazon Q Developer in chat applications.
+2. Do not create the SNS topic manually and do not configure the channel a second time.
+3. Deploy with `SlackIntegrationMode: CreateNew`, `CreateGuardDutyNotificationRule: Yes`, and the actual `SlackWorkspaceId` and `SlackChannelId` values.
+
+CloudFormation creates the SNS topic, read-only channel role, Slack channel configuration, EventBridge rules, and notification mapping. The channel must not be configured both manually and by CloudFormation, or the deployment can fail with a duplicate configuration.
+
+After deployment, send a test message from Amazon Q and then trigger the custom metric test below. Confirm that the Slack message contains the alarm state and stack context. If messages appear as replies, update the Amazon Q notification-threading preference in Slack; threading does not mean the event was lost.
+
 ## Test 1: custom CloudWatch metric
 
 The stack creates an `ApplicationFailuresAlarm`. Publish one datapoint using the stack's `Environment` value:
@@ -53,18 +90,11 @@ aws s3 rm s3://<DataBucketName>/learners/day19-test.txt --region ap-south-1
 
 `S3ObjectActivityRule` reacts quickly to `Object Created` and `Object Deleted`. CloudTrail data events record actor-level calls such as `PutObject`, `GetObject`, and `DeleteObject`, but delivery can take longer and data events can incur charges. Delete all test objects after the demonstration.
 
-## Optional Terraform smoke test
+## CloudFormation test path
 
-`day19-metrics-s3-test.tf` is intentionally smaller than the CloudFormation stack. It creates only a private S3 bucket, EventBridge-to-CloudWatch logging, and a custom metric alarm with no notification action. It does not create EC2, IAM users, Slack integration, CloudTrail, GuardDuty, or public access.
+Use the deployed `cloudadhar-day19-security-observability-stack.yaml` for all Day 19 testing. It creates the custom metric alarm, private S3 bucket, EventBridge object-activity rule, CloudTrail data events, and CloudWatch dashboard together. Use the stack outputs instead of creating a second infrastructure template.
 
-```bash
-terraform init
-terraform apply
-terraform output -raw test_bucket_name
-terraform destroy
-```
-
-Publish `CloudAdhar/Day19` with `Environment=terraform-test` to test the Terraform alarm. Remove test objects before `terraform destroy`.
+Publish `CloudAdhar/Day19` with the stack's `Environment` value to test `ApplicationFailuresAlarm`. Use the `DataBucketName` output for the S3 object activity commands above. Delete test objects and delete the CloudFormation stack during cleanup; review retained buckets manually because they use `DeletionPolicy: Retain`.
 
 ## Cognito with Gmail/Google
 
@@ -92,7 +122,6 @@ For a sample application, create an `index.html` with a â€œSign in with Googleâ€
 ## Cleanup
 
 - Delete test objects from S3.
-- Run `terraform destroy` if the smoke test was used.
 - Delete the CloudFormation stack.
 - Manually review retained data and audit buckets.
 - Remove temporary Google OAuth callback URLs and Cognito test users.

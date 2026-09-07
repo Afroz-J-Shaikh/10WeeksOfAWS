@@ -31,7 +31,7 @@ Functions, DynamoDB, an EC2-hosted UI, and IAM roles.
 |---|---|
 | [Day 19 live class README](./AWS_Zero_To_Hero_Day19_Security_Governance_Observability_Live_Class_README.md) | Security, governance, observability, Cognito, Gmail federation, metric, and S3 activity practice |
 | [Day 19 CloudFormation stack](./cloudadhar-day19-security-observability-stack.yaml) | Full learner demonstration with CloudWatch, CloudTrail, EventBridge, S3, EC2, and alerts |
-| [Day 19 Terraform smoke test](./day19-metrics-s3-test.tf) | Small test-only metric alarm and S3/EventBridge activity path |
+| [Day 19 CloudFormation test path](./cloudadhar-day19-security-observability-stack.yaml) | Test the custom metric alarm and S3/EventBridge activity from the deployed stack |
 
 Day 18 downloads:
 
