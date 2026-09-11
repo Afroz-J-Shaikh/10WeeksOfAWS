@@ -171,11 +171,11 @@ curl -i -X POST "${API_URL}/orders" \
 
    - Accepted Order
 
-   ![snapshot](./evidence/app/cmpleted.png)
+   ![snapshot](./evidence/app/completed.png)
 
-   ![snapshot](./evidence/app/cmpleted-graph.png)
+   ![snapshot](./evidence/app/completed-graph.png)
 
-   ![snapshot](./evidence/app/cmpleted-table.png)
+   ![snapshot](./evidence/app/completed-table.png)
 
    - Business-Rejected Order
 
